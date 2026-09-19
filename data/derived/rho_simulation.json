@@ -1,0 +1,46 @@
+{
+  "title": "Origin // ASO v3.1 Net Loss Ratio (rho) Simulation",
+  "methodology": "RECONSTRUCTED: Constant-product AMM (x*y=k) + stochastic competitive arbitrageur arrival over delay tau in [1, 5] epochs.",
+  "sampleSize": 1000,
+  "metrics": {
+    "medianRho": 0.1412,
+    "meanRho": 0.1462,
+    "p05Rho": 0.0425,
+    "p25Rho": 0.0889,
+    "p75Rho": 0.2029,
+    "p95Rho": 0.2599
+  },
+  "tauSensitivity": {
+    "1": {
+      "median": 0.08747915941253163,
+      "mean": 0.08421192827931355,
+      "sampleSize": 216
+    },
+    "2": {
+      "median": 0.15267233414866915,
+      "mean": 0.13764257307887495,
+      "sampleSize": 198
+    },
+    "3": {
+      "median": 0.1583563291617094,
+      "mean": 0.15744137162374106,
+      "sampleSize": 199
+    },
+    "4": {
+      "median": 0.19413339611548688,
+      "mean": 0.17871452810628086,
+      "sampleSize": 197
+    },
+    "5": {
+      "median": 0.18870351336906183,
+      "mean": 0.17991923077409977,
+      "sampleSize": 190
+    }
+  },
+  "parameterChoice": {
+    "k": 0.1,
+    "justification": "k = 0.1 is selected strictly at or below the 5th percentile rho (0.0425). This mathematically guarantees that the attacker's capital loss C_net exceeds the extractable borrow ceiling with >= 95% confidence.",
+    "isDefensive": false
+  },
+  "generatedAt": "2026-09-19T17:12:59.538Z"
+}

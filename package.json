@@ -1,0 +1,38 @@
+{
+  "name": "multipli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "compile": "node scripts/compile.js",
+    "test": "node test/run_tests.js",
+    "anvil": "anvil --port 8545 --chain-id 31337",
+    "deploy": "node scripts/deploy.js",
+    "server:sources": "node service/mockSourcesServer.js",
+    "service:attest": "node service/liveAttestationService.js",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "oracle",
+    "defi",
+    "multipli",
+    "rwa",
+    "attestation",
+    "solidity",
+    "hackathon"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "ethers": "^6.17.0",
+    "solc": "^0.8.28",
+    "vite": "^8.3.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  }
+}

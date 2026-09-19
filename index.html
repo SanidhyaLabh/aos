@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Origin // ASO v2 — Manipulation-Cost-Aware Oracle & Bounded-Loss Architecture</title>
+  <meta name="description" content="Origin ASO v2 bounds lending loss when market feeds are pushed by capital. Liquidity-weighted medians, manipulation cost gates, and bounded-loss epoch caps.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/index.css" />
+</head>
+<body>
+  <!-- Scroll Progress Indicator -->
+  <div class="scroll-progress-bar" id="scroll-progress"></div>
+
+  <div class="origin-canvas">
+    <!-- Sticky Glassmorphic Navigation -->
+    <header class="origin-nav">
+      <div class="nav-container">
+        <a href="/" class="nav-logo" data-route="/">
+          <svg class="logo-mark" viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="24" height="24" rx="6" fill="#000000"/>
+            <circle cx="12" cy="12" r="7" stroke="#ffffff" stroke-width="2"/>
+            <circle cx="12" cy="12" r="2.5" fill="#847dff"/>
+          </svg>
+          <span class="logo-text">Origin <span class="logo-tag">/ ASO v2</span></span>
+        </a>
+
+        <div class="nav-center" id="nav-landing-links">
+          <div class="nav-pill-group">
+            <a href="#the-gap" class="nav-ghost-btn">The Gap</a>
+            <a href="#incidents" class="nav-ghost-btn">Real Incidents</a>
+            <a href="#how" class="nav-ghost-btn">Architecture</a>
+            <a href="#guarantees" class="nav-ghost-btn">Guarantees</a>
+            <a href="#sentinel-states" class="nav-ghost-btn">Sentinel</a>
+            <a href="#limits" class="nav-ghost-btn">Limits</a>
+          </div>
+        </div>
+
+        <div class="nav-right">
+          <button class="nav-text-link" id="nav-btn-overview" data-route="/" style="display: none;">
+            &larr; Overview
+          </button>
+          <button class="btn-primary-cta" id="nav-btn-terminal" data-route="/terminal">
+            Open Terminal <span class="arrow">&rarr;</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- PAGE 1: LANDING (/) — Static Content Page   -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div id="page-landing" class="page-view active">
+      <!-- 1. Hero -->
+      <section class="landing-hero" id="hero">
+        <div class="sky-backdrop">
+          <div class="celestial-halo"></div>
+          <svg class="clouds-svg" viewBox="0 0 1440 860" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#08090d" stop-opacity="0.2"/>
+                <stop offset="25%" stop-color="#0d172e" stop-opacity="0.7"/>
+                <stop offset="55%" stop-color="#16315c" stop-opacity="0.85"/>
+                <stop offset="85%" stop-color="#245187" stop-opacity="0.6"/>
+                <stop offset="100%" stop-color="#08090d"/>
+              </linearGradient>
+              <radialGradient id="cloudGlow" cx="50%" cy="36%" r="48%">
+                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.18"/>
+                <stop offset="50%" stop-color="#847dff" stop-opacity="0.1"/>
+                <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <rect width="1440" height="860" fill="url(#skyGrad)"/>
+            <circle cx="720" cy="340" r="480" fill="url(#cloudGlow)"/>
+            <path d="M-100 480 Q 200 360, 500 440 T 1100 420 T 1600 500 L 1600 860 L -100 860 Z" fill="#ffffff" fill-opacity="0.06"/>
+            <path d="M-100 530 Q 350 430, 750 490 T 1300 460 T 1600 560 L 1600 860 L -100 860 Z" fill="#ffffff" fill-opacity="0.04"/>
+          </svg>
+        </div>
+
+        <div class="hero-content">
+          <div class="promo-eyebrow">
+            <span class="eyebrow-text">ATTESTED STALENESS ORACLE V2 &bull; MULTIPLI 2026</span>
+          </div>
+
+          <h1 class="display-hero">
+            An oracle can be <i>honest</i> and still be <i>manipulated</i>.
+          </h1>
+
+          <p class="hero-subhead">
+            When an attacker uses capital to move the market itself, every honest oracle reports that price with 100% fidelity. Origin ASO v2 prices the manipulation cost, clamps pricing to TWAP, and strictly bounds epoch borrowing loss to protect protocol solvency.
+          </p>
+
+          <div class="hero-cta-wrapper">
+            <button class="btn-primary-cta btn-lg" data-route="/terminal" id="btn-hero-open-terminal">
+              Open Terminal <span class="arrow">&rarr;</span>
+            </button>
+            <a href="#how" class="btn-ghost-outline btn-lg" id="btn-hero-how">
+              How it works &darr;
+            </a>
+          </div>
+
+          <!-- Proof Laurels -->
+          <div class="laurel-badges-row">
+            <div class="laurel-item">
+              <svg class="laurel-icon" viewBox="0 0 24 32" width="22" height="30" fill="none" stroke="#cacaca" stroke-width="1.4">
+                <path d="M4 28C6 22 10 18 10 8M10 8C8 12 4 16 2 20M10 8C12 14 11 20 8 26M4 4C6 8 8 12 6 18M20 28C18 22 14 18 14 8M14 8C16 12 20 16 22 20M14 8C12 14 13 20 16 26M20 4C18 8 16 12 18 18"/>
+              </svg>
+              <div class="laurel-text">
+                <span class="laurel-brand">Angeris &amp; Chitra 2020</span>
+                <span class="laurel-award">MANIPULATION COST THEORY</span>
+              </div>
+            </div>
+            <div class="laurel-item">
+              <svg class="laurel-icon" viewBox="0 0 24 32" width="22" height="30" fill="none" stroke="#cacaca" stroke-width="1.4">
+                <path d="M4 28C6 22 10 18 10 8M10 8C8 12 4 16 2 20M10 8C12 14 11 20 8 26M4 4C6 8 8 12 6 18M20 28C18 22 14 18 14 8M14 8C16 12 20 16 22 20M14 8C12 14 13 20 16 26M20 4C18 8 16 12 18 18"/>
+              </svg>
+              <div class="laurel-text">
+                <span class="laurel-brand">DeFi Safety 2026</span>
+                <span class="laurel-award">BOUNDED-LOSS LENDING PROTECTION</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. The Gap -->
+      <section class="modules-section" id="the-gap">
+        <div class="section-container">
+          <div class="section-title-wrap text-center">
+            <span class="mono-label text-iris font-bold">THE ATTACK SURFACE GAP</span>
+            <h2 class="display-section-title">Why <i>v1 Oracles</i> Fail Against Market Attacks</h2>
+            <p class="section-subhead centered">
+              Traditional oracles only secure the communication layer. When the underlying market itself is distorted, honest reporting becomes the vector of exploit.
+            </p>
+          </div>
+
+          <div class="gap-grid-dual">
+            <!-- Panel 1: Dishonest messenger -->
+            <div class="gap-panel glass-card border-ash">
+              <div class="gap-badge tag-v1">ORACLE LAYER (v1 SCOPE)</div>
+              <h3 class="gap-title">"Dishonest messenger"</h3>
+              <p class="gap-subtitle">Lying or late oracle</p>
+              <p class="gap-desc">
+                An attacker compromises a reporting node, forges price data, or exploits network congestion to delay feeds. The oracle reports a price that does not reflect real trading.
+              </p>
+              <div class="gap-defense-box defense-v1">
+                <span class="defense-label text-cyan font-bold">STOPPED BY v1:</span>
+                <ul class="defense-list">
+                  <li>Cryptographic EIP-191 signatures from whitelisted attesters</li>
+                  <li>Multi-source quorum consensus requirement (N &ge; 3)</li>
+                  <li>Hard staleness windows (&le; 60 seconds) &amp; divergence checks</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Panel 2: Dishonest market -->
+            <div class="gap-panel glass-card border-iris glow-panel">
+              <div class="gap-badge tag-v2">MARKET LAYER (v2 SOLUTION)</div>
+              <h3 class="gap-title">"Dishonest market"</h3>
+              <p class="gap-subtitle">Real price moved by capital</p>
+              <p class="gap-desc">
+                The attacker actually pushes the spot price on illiquid secondary orderbooks. Every honest source reports this manipulated number correctly and truthfully.
+              </p>
+              <div class="gap-defense-box defense-v2">
+                <span class="defense-label text-orchid font-bold">STOPPED BY v2:</span>
+                <ul class="defense-list">
+                  <li><strong>Cost awareness:</strong> Calculates capital needed to move each feed</li>
+                  <li><strong>Price clamping:</strong> Clamps effective borrow price to TWAP if attack is cheap</li>
+                  <li><strong>Epoch cap:</strong> Enforces hard $50,000 borrow growth cap per epoch to strictly bound loss</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Real Incidents -->
+      <section class="modules-section" id="incidents">
+        <div class="section-container">
+          <div class="section-title-wrap text-center">
+            <span class="mono-label text-orchid font-bold">HISTORICAL POST-MORTEMS</span>
+            <h2 class="display-section-title"><i>Real Incidents</i> in DeFi History</h2>
+            <p class="section-subhead centered">
+              Over $121M has been extracted from honest lending markets. In each case, the oracle was honest, but the underlying venue was cheap to fake.
+            </p>
+          </div>
+
+          <div class="incidents-grid-three">
+            <!-- Incident 1: Mango -->
+            <div class="incident-card glass-card">
+              <div class="incident-badge badge-mango">OCTOBER 2022</div>
+              <div class="incident-loss text-orchid font-bold">$117,000,000</div>
+              <h3 class="incident-title">Mango Markets</h3>
+              <p class="incident-summary">
+                Capital pumped one thin perpetual market on a DEX orderbook, honest oracles dutifully published the inflated mark price, and the attacker borrowed against phantom equity.
+              </p>
+              <div class="incident-cheap-callout">
+                <span class="cheap-tag">What was cheap to fake:</span>
+                <p class="cheap-desc">Orderbook depth on a single thin spot DEX — $10M of capital shifted the mark price by 10x without quorum dissent.</p>
+              </div>
+            </div>
+
+            <!-- Incident 2: Venus -->
+            <div class="incident-card glass-card">
+              <div class="incident-badge badge-venus">MARCH 2026</div>
+              <div class="incident-loss text-orchid font-bold">$3,700,000</div>
+              <h3 class="incident-title">Venus Protocol</h3>
+              <p class="incident-summary">
+                A thin secondary market token was pushed from $0.27 to over $5.00 in minutes. The lending market expanded debt capacity proportionally and was drained.
+              </p>
+              <div class="incident-cheap-callout">
+                <span class="cheap-tag">What was cheap to fake:</span>
+                <p class="cheap-desc">A low-liquidity secondary feed that naive arithmetic averaging weighted equally alongside deep institutional venues.</p>
+              </div>
+            </div>
+
+            <!-- Incident 3: Silo Finance -->
+            <div class="incident-card glass-card">
+              <div class="incident-badge badge-silo">APRIL 2026</div>
+              <div class="incident-loss text-orchid font-bold">$392,000</div>
+              <h3 class="incident-title">Silo Finance</h3>
+              <p class="incident-summary">
+                The protocol trusted its single cheapest available price source without calculating whether the capital required to move it was smaller than the borrow it unlocked.
+              </p>
+              <div class="incident-cheap-callout">
+                <span class="cheap-tag">What was cheap to fake:</span>
+                <p class="cheap-desc">The protocol's cheapest agreeing source link was pushed with minimal flash-loan capital, unlocking disproportionate debt.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Architecture (anchor #how) -->
+      <section class="modules-section arch-section" id="how">
+        <div class="section-container">
+          <div class="section-title-wrap text-center">
+            <span class="mono-label text-cyan font-bold">SYSTEM ARCHITECTURE</span>
+            <h2 class="display-section-title"><i>How</i> Origin ASO v2 Works</h2>
+            <p class="section-subhead centered">
+              An end-to-end multi-layer pipeline converting raw source observations into manipulation-cost-aware effective prices and bounded-loss borrowing parameters.
+            </p>
+          </div>
+
+          <!-- Architecture Block Diagram Image -->
+          <div class="arch-diagram-wrapper glass-card">
+            <img src="/assets/origin_aso_v2_architecture.png" alt="Origin ASO v2 System Architecture Diagram" class="arch-diagram-img" id="img-arch-diagram" />
+            <div class="arch-caption text-ash mono">
+              Figure 1: High-level dataflow connecting Source Ingestion, Quantitative Risk Engine, Sentinel Registry, and Downstream ToyLendingMarket.
+            </div>
+          </div>
+
+          <!-- Plain Language Explanations of Each Block -->
+          <div class="arch-blocks-grid">
+            <div class="arch-block-card glass-card">
+              <div class="arch-step-num text-cyan">01</div>
+              <h3 class="arch-block-title">Source Validation</h3>
+              <p class="arch-block-desc">
+                Continuously polls 4 independent custodian, orderbook, and interbank feeds (Ondo, Coinbase, Kraken, Fed H.15). Enforces quorum (&ge; 3 online sources), max age (&le; 60s), and cryptographic EIP-191 signatures from staked attesters.
+              </p>
+            </div>
+
+            <div class="arch-block-card glass-card">
+              <div class="arch-step-num text-cyan">02</div>
+              <h3 class="arch-block-title">Risk Engine</h3>
+              <p class="arch-block-desc">
+                Calculates the liquidity-weighted median requiring &gt;50% total capital depth to shift, tracks 5-period TWAP, and ranks sources by capital manipulation cost. Evaluates whether attack cost is cheaper than extractable borrowing value.
+              </p>
+            </div>
+
+            <div class="arch-block-card glass-card">
+              <div class="arch-step-num text-iris">03</div>
+              <h3 class="arch-block-title">Sentinel Registry</h3>
+              <p class="arch-block-desc">
+                An on-chain 6-state circuit breaker (FRESH, WATCH, STALE, DISPUTED, PROTECTIVE, RECOVERING). Reacts to risk signals by dynamically adjusting protocol debt ceilings between 100% and 0%, requiring a 3-consecutive-check streak to recover.
+              </p>
+            </div>
+
+            <div class="arch-block-card glass-card">
+              <div class="arch-step-num text-iris">04</div>
+              <h3 class="arch-block-title">Lending Risk Controller</h3>
+              <p class="arch-block-desc">
+                The credit facility (ToyLendingMarket) that consumes effective oracle pricing. Enforces collateral limits, verifies Sentinel debt ceilings, and gates every borrow transaction through a hard epoch loss budget.
+              </p>
+            </div>
+          </div>
+
+          <!-- The Three Outputs Breakdown -->
+          <div class="arch-outputs-container glass-card">
+            <div class="outputs-header">
+              <span class="mono-label text-cyan font-bold">THE THREE SYSTEM OUTPUTS</span>
+              <h3 class="outputs-title">What the Protocol Produces for Downstream DeFi</h3>
+            </div>
+            <div class="outputs-grid-three">
+              <div class="output-item">
+                <div class="output-dot dot-cyan"></div>
+                <div class="output-text">
+                  <strong class="text-cloud">1. Effective Price</strong>
+                  <p class="text-ash">Clamps to min(spot, TWAP, historical band) if the cost gate determines manipulation is cheap. Prevents phantom borrow expansion.</p>
+                </div>
+              </div>
+              <div class="output-item">
+                <div class="output-dot dot-iris"></div>
+                <div class="output-text">
+                  <strong class="text-cloud">2. Epoch Borrow Growth Cap</strong>
+                  <p class="text-ash">Strictly caps cumulative borrowing expansion to $50,000 USD per epoch, guaranteeing bounded worst-case damage even if an attack slips past detection.</p>
+                </div>
+              </div>
+              <div class="output-item">
+                <div class="output-dot dot-orchid"></div>
+                <div class="output-text">
+                  <strong class="text-cloud">3. Sentinel Debt Ceiling</strong>
+                  <p class="text-ash">Dynamic protocol-wide ceiling adjusting from $500,000 (100% in FRESH) to $150,000 (30% in PROTECTIVE) and $0 (in DISPUTED). Repayment is always ungated.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Three Guarantees -->
+      <section class="modules-section" id="guarantees">
+        <div class="section-container">
+          <div class="section-title-wrap text-center">
+            <span class="mono-label text-iris font-bold">ECONOMIC &amp; CRYPTOGRAPHIC INVARIANTS</span>
+            <h2 class="display-section-title"><i>Three</i> Guarantees</h2>
+            <p class="section-subhead centered">
+              Layered defense ensuring that neither low-effort fraud nor sovereign-grade capital attacks can compromise protocol solvency.
+            </p>
+          </div>
+
+          <div class="guarantees-grid-three">
+            <div class="guarantee-card glass-card">
+              <div class="g-icon-circle border-cyan text-cyan">01</div>
+              <h3 class="g-title">Freshness stops the lazy attacker.</h3>
+              <p class="g-desc">
+                Attestation timestamps, cryptographic signatures, and strict 60-second staleness limits prevent delayed, replayed, or uncoordinated oracle reports from ever reaching the lending market.
+              </p>
+            </div>
+
+            <div class="guarantee-card glass-card">
+              <div class="g-icon-circle border-orchid text-orchid">02</div>
+              <h3 class="g-title">Cost awareness stops the funded attacker.</h3>
+              <p class="g-desc">
+                By modeling orderbook depth and quadratic slippage, the Risk Engine requires that manipulating the price costs at least 1.2x the borrow it unlocks. Cheap moves are clamped to TWAP.
+              </p>
+            </div>
+
+            <div class="guarantee-card glass-card">
+              <div class="g-icon-circle border-iris text-iris">03</div>
+              <h3 class="g-title">The epoch cap bounds the loss even if detection fails.</h3>
+              <p class="g-desc">
+                If a zero-day vector or massive whale squeeze successfully fools detection, the hard $50,000 epoch borrow growth budget strictly caps protocol loss to an acceptable, bounded balance sheet expense.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Sentinel States -->
+      <section class="modules-section" id="sentinel-states">
+        <div class="section-container">
+          <div class="section-title-wrap text-center">
+            <span class="mono-label text-cyan font-bold">SENTINEL CIRCUIT BREAKER</span>
+            <h2 class="display-section-title"><i>The 6 Sentinel</i> States</h2>
+            <p class="section-subhead centered">
+              Autonomous state machine adapting debt ceilings to real-time risk conditions. Repayments are guaranteed to succeed in every state.
+            </p>
+          </div>
+
+          <div class="states-table-card glass-card">
+            <table class="origin-clean-table">
+              <thead>
+                <tr>
+                  <th>STATE</th>
+                  <th>CEILING</th>
+                  <th>MEANING &amp; BEHAVIOR</th>
+                  <th>TRIGGERING CHECK</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="state-pill pill-fresh">FRESH</span></td>
+                  <td class="mono text-cyan">100% ($500k)</td>
+                  <td>Normal healthy operation. Full borrowing capacity enabled.</td>
+                  <td class="mono text-ash">All feeds online, fresh, aligned, and cost-verified.</td>
+                </tr>
+                <tr>
+                  <td><span class="state-pill pill-watch">WATCH</span></td>
+                  <td class="mono text-amber">80% ($400k)</td>
+                  <td>Cautionary threshold. Slight price velocity or mild TWAP drift.</td>
+                  <td class="mono text-ash">Velocity or TWAP drift exceeds soft threshold.</td>
+                </tr>
+                <tr>
+                  <td><span class="state-pill pill-stale">STALE</span></td>
+                  <td class="mono text-orange">50% ($250k)</td>
+                  <td>Freshness degraded. One source offline or attestation age &gt; 60s.</td>
+                  <td class="mono text-ash">Source server offline or attestation window timeout.</td>
+                </tr>
+                <tr>
+                  <td><span class="state-pill pill-disputed">DISPUTED</span></td>
+                  <td class="mono text-red">0% ($0 Frozen)</td>
+                  <td>Critical breach. All borrowing halted; emergency freeze active.</td>
+                  <td class="mono text-ash">Vault share integrity jump or governance intervention.</td>
+                </tr>
+                <tr>
+                  <td><span class="state-pill pill-protective">PROTECTIVE</span></td>
+                  <td class="mono text-orchid">30% ($150k)</td>
+                  <td>Active attack clamped. Effective price forced to TWAP; debt capped.</td>
+                  <td class="mono text-ash">Manipulation cost gate detects cheap manipulation.</td>
+                </tr>
+                <tr>
+                  <td><span class="state-pill pill-recovering">RECOVERING</span></td>
+                  <td class="mono text-blue">25% &rarr; 75%</td>
+                  <td>Provisional recovery. Ceiling restores step-by-step across 3 cycles.</td>
+                  <td class="mono text-ash">Sources restored; requires 3 consecutive healthy checks.</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="repay-invariant-banner">
+              <div class="invariant-icon">&bull;</div>
+              <div class="invariant-content">
+                <strong>CRITICAL DEFI INVARIANT: <code>repay()</code> IS UNGATED IN EVERY STATE</strong>
+                <p>
+                  Regardless of whether Sentinel is FRESH, STALE, PROTECTIVE, or DISPUTED, borrowers can always repay debt and redeem collateral. Freezing repayments creates artificial liquidations; Origin guarantees open repayments unconditionally.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. Honest Limits -->
+      <section class="modules-section" id="limits">
+        <div class="section-container">
+          <div class="section-title-wrap text-center">
+            <span class="mono-label text-ash font-bold">TRANSPARENCY &amp; ASSUMPTIONS</span>
+            <h2 class="display-section-title"><i>Honest</i> Limits</h2>
+            <p class="section-subhead centered">
+              We believe in honest threat modeling. No security model is magic; understanding boundaries is how resilient protocols are built.
+            </p>
+          </div>
+
+          <div class="limits-grid-three">
+            <div class="limit-card glass-card">
+              <h3 class="limit-title">1. Cost figure is an estimate</h3>
+              <p class="limit-desc">
+                Attack cost is calculated using on-chain liquidity weights, published orderbook depth, and quadratic slippage approximations. While highly predictive, live orderbook liquidity fluctuates with broader market volatility.
+              </p>
+            </div>
+
+            <div class="limit-card glass-card">
+              <h3 class="limit-title">2. Loss bounding vs total prevention</h3>
+              <p class="limit-desc">
+                We guarantee bounded loss rather than promising zero manipulation. A well-funded attacker willing to spend millions to move high-liquidity sources can still move price; the epoch cap bounds protocol damage to a survivable $50k budget.
+              </p>
+            </div>
+
+            <div class="limit-card glass-card">
+              <h3 class="limit-title">3. Demo sources are mock servers</h3>
+              <p class="limit-desc">
+                For deterministic simulation, local demonstrations connect to 4 realistic mock source servers (Ondo, Coinbase, Kraken, Fed H.15) on port 4000. In production, these ingest live institutional APIs and chainlink feeds.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. Footer CTA -->
+      <section class="landing-footer-cta">
+        <div class="section-container text-center">
+          <div class="cta-inner-card glass-card">
+            <h2 class="display-section-title"><i>Test the Defense</i> in the Simulation Terminal</h2>
+            <p class="section-subhead centered">
+              Launch real on-chain attacks on local EVM. Watch the cost gate clamp prices, see the epoch cap revert over-limit borrows, and trace every number to verified RPC responses.
+            </p>
+            <div style="margin-top: 28px;">
+              <button class="btn-primary-cta btn-lg" data-route="/terminal" id="btn-footer-open-terminal">
+                Open Terminal <span class="arrow">&rarr;</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- PAGE 2: MINIMAL TERMINAL (/terminal) — High-Impact ASCII-Style -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div id="page-terminal" class="page-view">
+      <div class="minimal-terminal-container">
+        
+        <!-- Header Bar -->
+        <div class="m-term-header">
+          <div class="m-term-title-block">
+            <span class="m-term-logo">ORIGIN // ASO</span>
+            <span class="m-term-sub">v3.1 Bounded-Loss Architecture</span>
+          </div>
+          
+          <div class="m-term-state-block">
+            <div class="m-term-badge badge-fresh" id="term-sentinel-badge">
+              <span class="badge-dot">●</span> <span id="term-badge-text">FRESH</span>
+            </div>
+            <div class="m-term-live-tag">live <span class="text-green font-bold">✓</span></div>
+          </div>
+
+          <div class="m-term-nav-back">
+            <button class="btn-ghost-outline btn-xs" id="btn-term-back" data-route="/">
+              &larr; Overview
+            </button>
+          </div>
+        </div>
+
+        <div class="m-term-reason-line">
+          <span class="mono-label text-fog">reason:</span>
+          <span class="mono text-cyan" id="term-sentinel-reason">healthy consensus &bull; 4/4 sources reporting</span>
+        </div>
+
+        <div class="m-term-divider"></div>
+
+        <!-- Prices Row -->
+        <div class="m-term-prices-row">
+          <div class="m-price-col">
+            <div class="m-price-label">MARKET PRICE</div>
+            <div class="m-price-val mono" id="term-market-price">$ 100.02</div>
+            <div class="m-price-sub mono text-cyan" id="term-market-change">▲ +0.02% (last cycle)</div>
+          </div>
+          <div class="m-price-col">
+            <div class="m-price-label">LENDER USES</div>
+            <div class="m-price-val mono text-green" id="term-lender-price">$ 100.02</div>
+            <div class="m-price-sub mono text-fog" id="term-lender-desc">weighted median &bull; fresh</div>
+          </div>
+        </div>
+
+        <!-- Price Chart Canvas (Two Lines with Alert Shading) -->
+        <div class="m-term-chart-panel">
+          <div class="m-chart-header">
+            <div class="m-chart-legend">
+              <span class="legend-item"><span class="line-swatch swatch-market"></span> market</span>
+              <span class="legend-item"><span class="line-swatch swatch-lender"></span> lender uses</span>
+              <span class="legend-item" id="chart-alert-legend" style="display: none;"><span class="line-swatch swatch-alert"></span> state alert shading</span>
+            </div>
+            <div class="m-chart-coords mono text-ash" id="chart-hover-coord">t-0s &bull; $100.02</div>
+          </div>
+          <canvas id="minimal-terminal-chart" width="860" height="135" class="m-chart-canvas"></canvas>
+        </div>
+
+        <!-- Borrow Limit & Debt Ceiling Bars -->
+        <div class="m-term-borrow-panel">
+          <div class="m-term-section-title">BORROW LIMIT</div>
+          
+          <div class="m-bar-row">
+            <div class="m-bar-label-line">
+              <span class="mono text-cloud">Debt:</span>
+              <span class="mono text-iris font-bold" id="term-debt-text">$ 0 / $ 500,000 (gamma cap)</span>
+            </div>
+            <div class="m-ascii-progress-wrap">
+              <span class="m-ascii-bar mono" id="term-debt-ascii-bar">[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░]</span>
+              <span class="m-ascii-pct mono text-ash" id="term-debt-pct">0%</span>
+            </div>
+          </div>
+
+          <div class="m-bar-row" style="margin-top: 8px;">
+            <div class="m-bar-label-line">
+              <span class="mono text-cloud">Epoch growth:</span>
+              <span class="mono text-cyan font-bold" id="term-epoch-text">$ 0 / $ 100,000</span>
+            </div>
+            <div class="m-ascii-progress-wrap">
+              <span class="m-ascii-bar mono" id="term-epoch-ascii-bar">[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░]</span>
+              <span class="m-ascii-pct mono text-ash" id="term-epoch-pct">0%</span>
+            </div>
+          </div>
+
+          <!-- Borrow & Repay Interactive Inputs -->
+          <div class="m-actions-row">
+            <div class="m-action-group">
+              <span class="mono text-fog font-bold">Try borrow:</span>
+              <div class="m-input-bracket">
+                <span class="bracket">(</span>
+                <input type="number" id="input-borrow-amount" value="10000" step="1000" class="m-mono-input" />
+                <span class="bracket">)</span>
+              </div>
+              <button class="m-btn-terminal m-btn-primary" id="btn-do-borrow">Borrow</button>
+            </div>
+
+            <div class="m-action-group">
+              <span class="mono text-fog font-bold">Repay:</span>
+              <div class="m-input-bracket">
+                <span class="bracket">(</span>
+                <input type="number" id="input-repay-amount" value="5000" step="1000" class="m-mono-input" />
+                <span class="bracket">)</span>
+              </div>
+              <button class="m-btn-terminal" id="btn-do-repay">Repay</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Last Transaction Result -->
+        <div class="m-term-tx-panel">
+          <div class="m-term-section-title">LAST TX RESULT:</div>
+          <div class="m-tx-result-box mono" id="term-last-tx-box">
+            Confirmed &bull; Borrowed $10,000 &bull; Oracle price: $100.02
+          </div>
+        </div>
+
+        <!-- Attack Economics (15% push) -->
+        <div class="m-term-econ-panel">
+          <div class="m-term-section-title">ATTACK ECONOMICS (15% push)</div>
+          <div class="m-econ-grid">
+            <div class="m-econ-row">
+              <span class="m-econ-k text-fog">Attacker net cost:</span>
+              <span class="m-econ-v mono text-cloud" id="term-econ-cost">$ 1,260,000</span>
+            </div>
+            <div class="m-econ-row">
+              <span class="m-econ-k text-fog">Max extra borrow:</span>
+              <span class="m-econ-v mono text-cloud" id="term-econ-borrow">$ 120,000</span>
+            </div>
+            <div class="m-econ-row">
+              <span class="m-econ-k text-fog">Net result:</span>
+              <span class="m-econ-v mono text-green font-bold" id="term-econ-result">-$ 1,140,000 (ATTACK LOSES MONEY)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scenarios Bar & Details Drawer Toggle -->
+        <div class="m-term-scenarios-bar">
+          <div class="m-scen-label text-fog font-bold mono">SCENARIOS:</div>
+          <div class="m-scen-buttons-group">
+            <button class="m-scen-btn active" id="btn-scen-baseline">Baseline</button>
+            <button class="m-scen-btn" id="btn-scen-thin">Thin pump</button>
+            <button class="m-scen-btn" id="btn-scen-squeeze">Deep squeeze</button>
+            <button class="m-scen-btn" id="btn-scen-kill">Kill source</button>
+            <button class="m-scen-btn" id="btn-scen-pull">Pull liquidity</button>
+            <button class="m-scen-btn" id="btn-scen-recover">Recover</button>
+          </div>
+          <div class="m-scen-right-actions" style="margin-left: auto; display: flex; gap: 8px;">
+            <button class="m-btn-validator" id="btn-open-validator">
+              [Validator &#9881;]
+            </button>
+            <button class="m-btn-details" id="btn-toggle-details">
+              [Details &#9654;]
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- Slide-Out Details Drawer (Parts A to G) -->
+      <div class="details-drawer-overlay" id="details-drawer-overlay"></div>
+      <div class="details-drawer-sheet" id="details-drawer">
+        <div class="drawer-header">
+          <div class="drawer-title-group">
+            <span class="mono-label text-iris font-bold">SYSTEM INSPECTOR</span>
+            <h3 class="drawer-title">Origin // ASO v3.1 Specifications</h3>
+          </div>
+          <button class="drawer-close-btn" id="btn-close-drawer">&times;</button>
+        </div>
+
+        <!-- Drawer Navigation Tabs -->
+        <div class="drawer-tabs-nav">
+          <button class="drawer-tab-btn active" data-drawer-tab="tab-architecture">Architecture L1-L3</button>
+          <button class="drawer-tab-btn" data-drawer-tab="tab-sources">Per-Source Ranking</button>
+          <button class="drawer-tab-btn" data-drawer-tab="tab-validation">Validation Tab (Part G)</button>
+          <button class="drawer-tab-btn" data-drawer-tab="tab-events">Live Event Log</button>
+        </div>
+
+        <!-- Drawer Content Panels -->
+        <div class="drawer-content-body">
+          
+          <!-- TAB 1: Architecture (L1, L2, L3) -->
+          <div class="drawer-tab-pane active" id="tab-architecture">
+            <div class="arch-layer-card glass-card">
+              <div class="layer-badge text-cyan">LAYER 1 &bull; BASIC CONSENSUS &amp; FRESHNESS</div>
+              <h4 class="layer-title">Cryptographic Freshness &amp; Quorum Check</h4>
+              <p class="layer-text">
+                Every attestation requires multi-source signatures with verifiable timestamp delta &le; 60 seconds. If sources stop reporting or quorum drops below 3/4, Sentinel immediately halts borrowing.
+              </p>
+              <div class="layer-kv-grid mono">
+                <div><span>Max Attestation Age:</span> <b>60 seconds</b></div>
+                <div><span>Signature Format:</span> <b>EIP-712 / EIP-191</b></div>
+                <div><span>Quorum Requirement:</span> <b>&ge; 3 of 4 feeds</b></div>
+                <div><span>Attester Slashing:</span> <b>1.0 ETH Bond burned on &gt;50 bps divergence</b></div>
+              </div>
+            </div>
+
+            <div class="arch-layer-card glass-card" style="margin-top: 16px;">
+              <div class="layer-badge text-orchid">LAYER 2 &bull; QUANTITATIVE RISK ENGINE</div>
+              <h4 class="layer-title">Manipulation-Cost Calculation &amp; Coalition Search</h4>
+              <p class="layer-text">
+                Computes capital needed to push the weighted median price by move <i>m</i> across all combinations of available sources.
+              </p>
+              <div class="formula-box mono">
+                C_cap,s(m) = R_s &times; (&radic;(1+m) &minus; 1)<br/>
+                C_cap,med(m) = min_{S, &sum;w'_s &ge; 0.5} &sum;_{s &isin; S} C_cap,s(m)<br/>
+                C_net(m) = &rho; &times; C_cap,med(m)  [&rho; = 0.1412 measured in Part D]
+              </div>
+              <div class="holes-closed-block">
+                <div class="hole-item">
+                  <span class="text-cloud font-bold">A7.i Slow Ratchet Anchor:</span> Measures move <i>m</i> against 24h slow anchor with max 1.00% drift rate per epoch, neutralizing drip/creep pumps.
+                </div>
+                <div class="hole-item" style="margin-top: 6px;">
+                  <span class="text-cloud font-bold">A7.ii Fake Depth Defense:</span> Uses MINIMUM depth seen over last 12 cycles in ring buffer, neutralizing flash liquidity injection.
+                </div>
+              </div>
+            </div>
+
+            <div class="arch-layer-card glass-card" style="margin-top: 16px;">
+              <div class="layer-badge text-iris">LAYER 3 &bull; DYNAMIC BOUNDED LOSS</div>
+              <h4 class="layer-title">Cost-Anchored Debt Ceiling &amp; Epoch Growth Cap</h4>
+              <p class="layer-text">
+                Couples credit capacity strictly to verified attack cost. Under any market push, attacker loses more capital than maximum extra debt extracted.
+              </p>
+              <div class="formula-box mono">
+                &Gamma; = k &times; C_net(m_Ref) / m_Ref   [k = 0.10, m_Ref = 15%]<br/>
+                debtCeiling = min(configuredCeiling, &Gamma;)<br/>
+                epochGrowthCap = g &times; &Gamma;                 [g = 20%]
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: Per-Source Ranking -->
+          <div class="drawer-tab-pane" id="tab-sources">
+            <div class="table-responsive" style="margin-top: 12px;">
+              <table class="m-data-table mono" id="drawer-sources-table">
+                <thead>
+                  <tr>
+                    <th>Source</th>
+                    <th>Price</th>
+                    <th>Weight</th>
+                    <th>Depth (R_s)</th>
+                    <th>Upstream</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="drawer-sources-tbody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- TAB 3: Part G Validation Tab -->
+          <div class="drawer-tab-pane" id="tab-validation">
+            <div class="validation-top-banner">
+              <div class="honesty-badge">
+                <span class="tag-green font-bold">HONESTY RULES ENFORCED</span>
+                <span class="text-cloud" style="font-size: 11px; margin-left: 8px;">
+                  All figures generated by <code class="mono text-cyan">runValidationHarness.js</code>. No fabricated or estimated data.
+                </span>
+              </div>
+              <div class="sample-caveat-banner" style="margin-top: 8px;">
+                <span class="text-orchid font-bold">SMALL SAMPLE CAVEAT:</span>
+                <span class="text-ash" style="font-size: 11px;"> N = 4 historical oracle manipulation incidents available with full on-chain transaction logs.</span>
+              </div>
+            </div>
+
+            <!-- Incidents Table -->
+            <div class="validation-section" style="margin-top: 16px;">
+              <div class="section-title-sm text-cloud font-bold">HISTORICAL INCIDENTS BACKTEST TABLE</div>
+              <div class="table-responsive" style="margin-top: 8px;">
+                <table class="m-data-table mono" id="val-incidents-table">
+                  <thead>
+                    <tr>
+                      <th>Incident</th>
+                      <th>Date</th>
+                      <th>Tag</th>
+                      <th>Real Loss</th>
+                      <th>ASO Max Loss</th>
+                      <th>Prevented</th>
+                    </tr>
+                  </thead>
+                  <tbody id="val-incidents-tbody">
+                    <!-- Populated from validation_results.json -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Confusion Matrix & Performance Metrics -->
+            <div class="validation-section" style="margin-top: 18px;">
+              <div class="section-title-sm text-cloud font-bold">CONFUSION SUMMARY &amp; METRICS (N = 104)</div>
+              <div class="confusion-grid mono" style="margin-top: 8px;">
+                <div class="conf-box">
+                  <span class="conf-label">True Positives</span>
+                  <span class="conf-val text-green" id="conf-tp">4 / 4 (100%)</span>
+                </div>
+                <div class="conf-box">
+                  <span class="conf-label">False Positives</span>
+                  <span class="conf-val text-orchid" id="conf-fp">1 / 100 (1.0%)</span>
+                </div>
+                <div class="conf-box">
+                  <span class="conf-label">True Negatives</span>
+                  <span class="conf-val text-cloud" id="conf-tn">99 / 100</span>
+                </div>
+                <div class="conf-box">
+                  <span class="conf-label">False Negatives</span>
+                  <span class="conf-val text-green font-bold" id="conf-fn">0 (0.0%)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Parameter Sensitivity Grid -->
+            <div class="validation-section" style="margin-top: 18px;">
+              <div class="section-title-sm text-cloud font-bold">PARAMETER SENSITIVITY SWEEP (k, g, &tau;)</div>
+              <p class="panel-sub text-ash" style="margin-top: 2px;">
+                Sweeps safety factor k &isin; [0.05, 0.20], epoch growth g &isin; [0.10, 0.30], arb reaction &tau; &isin; [1, 5].
+              </p>
+              <div class="table-responsive" style="margin-top: 8px; max-height: 200px; overflow-y: auto;">
+                <table class="m-data-table mono" id="val-sensitivity-table">
+                  <thead>
+                    <tr>
+                      <th>k</th>
+                      <th>g</th>
+                      <th>&tau;</th>
+                      <th>C_net</th>
+                      <th>&Gamma;</th>
+                      <th>Epoch Cap</th>
+                      <th>Deterred?</th>
+                    </tr>
+                  </thead>
+                  <tbody id="val-sensitivity-tbody">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Rho Simulation Distribution (Part D) -->
+            <div class="validation-section" style="margin-top: 18px;">
+              <div class="section-title-sm text-cloud font-bold">NET LOSS RATIO (&rho;) DISTRIBUTION (PART D)</div>
+              <div class="rho-summary-box mono" style="margin-top: 8px;">
+                <div class="rho-metric-row">
+                  <span>Empirical Median &rho;:</span> <b class="text-cyan" id="rho-median">0.1412 (14.12%)</b>
+                </div>
+                <div class="rho-metric-row">
+                  <span>5th Percentile &rho;_05:</span> <b class="text-ash" id="rho-p05">0.0425 (4.25%)</b>
+                </div>
+                <div class="rho-metric-row">
+                  <span>Selected Safety Factor k:</span> <b class="text-green">0.10 (10.00%)</b>
+                </div>
+                <p class="rho-explanation text-ash" style="font-size: 11px; margin-top: 6px;">
+                  Choice of k = 0.10 ensures that extractable borrow ceiling does not exceed attacker net loss, rendering capital attacks strictly unprofitable across arbitrary market depth.
+                </p>
+              </div>
+            </div>
+
+            <!-- Failure Mode Matrix -->
+            <div class="validation-section" style="margin-top: 18px;">
+              <div class="section-title-sm text-cloud font-bold">FAILURE MODE MATRIX (PART F)</div>
+              <div class="table-responsive" style="margin-top: 8px;">
+                <table class="m-data-table mono" id="val-failure-table">
+                  <thead>
+                    <tr>
+                      <th>Vector</th>
+                      <th>Layer 1</th>
+                      <th>Layer 2</th>
+                      <th>Layer 3 Outcome</th>
+                    </tr>
+                  </thead>
+                  <tbody id="val-failure-tbody">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Ablation Study -->
+            <div class="validation-section" style="margin-top: 18px;">
+              <div class="section-title-sm text-cloud font-bold">ABLATION STUDY (PART G)</div>
+              <div class="table-responsive" style="margin-top: 8px;">
+                <table class="m-data-table mono" id="val-ablation-table">
+                  <thead>
+                    <tr>
+                      <th>System</th>
+                      <th>Freshness</th>
+                      <th>Cost Awareness</th>
+                      <th>Mango Outcome</th>
+                    </tr>
+                  </thead>
+                  <tbody id="val-ablation-tbody">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- CSV Downloads -->
+            <div class="validation-section" style="margin-top: 20px; padding-bottom: 24px;">
+              <div class="section-title-sm text-cloud font-bold">DOWNLOAD RAW HARNESS CSV DATA</div>
+              <div class="csv-buttons-row" style="margin-top: 8px;">
+                <a href="/data/incidents.csv" download class="btn-ghost-outline btn-xs mono">
+                  &darr; incidents.csv
+                </a>
+                <a href="/data/sensitivity_sweep.csv" download class="btn-ghost-outline btn-xs mono">
+                  &darr; sensitivity_sweep.csv
+                </a>
+                <a href="/data/ablation.csv" download class="btn-ghost-outline btn-xs mono">
+                  &darr; ablation.csv
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- TAB 4: Live Event Log -->
+          <div class="drawer-tab-pane" id="tab-events">
+            <div class="cli-header-bar">
+              <span class="mono text-cyan font-bold">&gt;_ AUDITABLE ON-CHAIN EVENT STREAM</span>
+              <button class="btn-ghost-outline btn-xs mono" id="btn-copy-drawer-log">Copy Log</button>
+            </div>
+            <pre class="cli-stream-window mono" id="drawer-cli-stream">
+[BOOT] System inspector connected to EVM node at http://127.0.0.1:8545.
+[CONTRACTS] RiskEngine, SentinelRegistry, and ToyLendingMarket synced.
+            </pre>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- MANUAL VALIDATOR DRAWER / PANEL (User-Entered Inputs)       -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="validator-drawer-overlay" id="validator-drawer-overlay"></div>
+    <div class="validator-drawer-sheet" id="validator-drawer">
+      <div class="drawer-header">
+        <div class="drawer-title-group">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span class="mono-label text-cyan font-bold">MANUAL RISK VALIDATOR</span>
+            <span class="tag-green font-bold mono" style="font-size: 10px; padding: 2px 6px;">EVM SNAPSHOT ENFORCED</span>
+          </div>
+          <h3 class="drawer-title" style="margin-top: 4px;">Origin // ASO v3.1 Contract Evaluation Harness</h3>
+        </div>
+        <button class="drawer-close-btn" id="btn-close-validator">&times;</button>
+      </div>
+
+      <!-- Persistent Disclaimer Note -->
+      <div class="val-disclaimer-banner">
+        <span class="text-orchid font-bold">USER-ENTERED INPUTS:</span>
+        <span class="text-cloud" style="font-size: 11px; margin-left: 6px;">
+          Nothing is pre-recorded. Every result is computed live by the deployed contracts and EVM state machine. Results depend on the inputs you enter; few runs give weak evidence.
+        </span>
+      </div>
+
+      <!-- Historical Incident Script Presets -->
+      <div class="val-presets-bar">
+        <span class="mono-label text-iris font-bold">TEST PRESETS:</span>
+        <button class="btn-preset mono" id="btn-preset-mango" data-preset="mango">Mango Markets (Oct 2022)</button>
+        <button class="btn-preset mono" id="btn-preset-inverse" data-preset="inverse">Inverse Finance (Apr 2022)</button>
+        <button class="btn-preset mono" id="btn-preset-venus" data-preset="venus">Venus THE (Slow Ratchet 2026)</button>
+        <button class="btn-preset mono" id="btn-preset-moonwell" data-preset="moonwell">Moonwell MAMO (Aug 2026)</button>
+        <button class="btn-preset mono" id="btn-preset-reset" data-preset="reset">Default Template</button>
+      </div>
+
+      <!-- Validator Top Controls -->
+      <div class="val-top-controls mono">
+        <div class="val-ctrl-group">
+          <span class="mono-label text-fog">This run is:</span>
+          <label class="val-radio-label">
+            <input type="radio" name="val-run-label" value="Attack" id="val-label-attack" checked />
+            <span class="text-orchid font-bold">Attack</span>
+          </label>
+          <label class="val-radio-label">
+            <input type="radio" name="val-run-label" value="Honest" id="val-label-honest" />
+            <span class="text-green font-bold">Honest</span>
+          </label>
+        </div>
+
+        <div class="val-ctrl-group">
+          <span class="mono-label text-fog">Loss if unprotected (USD):</span>
+          <div class="m-input-bracket">
+            <span class="bracket">$</span>
+            <input type="number" id="val-input-unprotected-loss" value="117800000" class="m-mono-input" style="width: 140px;" placeholder="Optional" />
+          </div>
+        </div>
+
+        <div class="val-ctrl-group">
+          <label class="val-neg-control-label">
+            <input type="checkbox" id="val-toggle-neg-control" />
+            <span class="text-red font-bold">Deliberately wrong cap (negative control)</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Validator Drawer Tabs -->
+      <div class="drawer-tabs-nav" style="margin-top: 14px;">
+        <button class="drawer-tab-btn active" data-val-tab="tab-val-run">Interactive Run &amp; Script</button>
+        <button class="drawer-tab-btn" data-val-tab="tab-val-sweep">Parameter Sensitivity Sweep</button>
+        <button class="drawer-tab-btn" data-val-tab="tab-val-log">Run Log &amp; Wilson Statistics</button>
+      </div>
+
+      <!-- Validator Drawer Body Content -->
+      <div class="drawer-content-body" style="padding-top: 14px;">
+        
+        <!-- ==================================================== -->
+        <!-- TAB 1: Interactive Run & Script                      -->
+        <!-- ==================================================== -->
+        <div class="val-tab-pane active" id="tab-val-run">
+          
+          <!-- Sources Configuration Table -->
+          <div class="val-panel-section">
+            <div class="val-section-header">
+              <span class="section-title-sm text-cloud font-bold">1. ORACLE SOURCES CONFIGURATION</span>
+              <button class="btn-ghost-outline btn-xs mono" id="btn-val-add-source">+ Add Source</button>
+            </div>
+            <div class="table-responsive" style="margin-top: 8px;">
+              <table class="m-data-table mono" id="val-sources-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Price ($)</th>
+                    <th>Quote Depth ($)</th>
+                    <th>Tradable?</th>
+                    <th>Weight (bps)</th>
+                    <th>Group</th>
+                    <th>Reporting?</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="val-sources-tbody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Protocol & Risk Parameters Grid -->
+          <div class="val-panel-section" style="margin-top: 18px;">
+            <div class="val-section-header">
+              <span class="section-title-sm text-cloud font-bold">2. PROTOCOL &amp; RISK ENGINE PARAMETERS (PART A)</span>
+            </div>
+            <div class="val-params-grid mono" style="margin-top: 8px;">
+              <div class="val-param-item">
+                <label>LTV:</label>
+                <input type="number" id="val-param-ltv" value="0.80" step="0.05" class="m-mono-input" />
+              </div>
+              <div class="val-param-item">
+                <label>Safety factor k:</label>
+                <input type="number" id="val-param-k" value="0.10" step="0.01" class="m-mono-input" />
+              </div>
+              <div class="val-param-item">
+                <label>Reference move mRef:</label>
+                <input type="number" id="val-param-mref" value="0.15" step="0.01" class="m-mono-input" />
+              </div>
+              <div class="val-param-item">
+                <label>Net loss ratio &rho;:</label>
+                <input type="number" id="val-param-rho" value="0.1412" step="0.01" class="m-mono-input" />
+              </div>
+              <div class="val-param-item">
+                <label>Epoch growth g:</label>
+                <input type="number" id="val-param-g" value="0.20" step="0.05" class="m-mono-input" />
+              </div>
+              <div class="val-param-item">
+                <label>TWAP window (cycles):</label>
+                <input type="number" id="val-param-twap" value="10" step="1" class="m-mono-input" />
+              </div>
+              <div class="val-param-item">
+                <label>Depth lookback N:</label>
+                <input type="number" id="val-param-lookback" value="12" step="1" class="m-mono-input" />
+              </div>
+              <div class="val-param-item">
+                <label>Config ceiling ($):</label>
+                <input type="number" id="val-param-ceiling" value="500000" step="50000" class="m-mono-input" style="width: 110px;" />
+              </div>
+              <div class="val-param-item">
+                <label>Collateral ($):</label>
+                <input type="number" id="val-param-collateral" value="1000000" step="100000" class="m-mono-input" style="width: 110px;" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Cycle Script Table -->
+          <div class="val-panel-section" style="margin-top: 18px;">
+            <div class="val-section-header">
+              <div>
+                <span class="section-title-sm text-cloud font-bold">3. CYCLE EXECUTION SCRIPT</span>
+                <span class="text-ash" style="font-size: 11px; margin-left: 8px;">(Set prices, depths, offline sources, borrow or repay actions per cycle)</span>
+              </div>
+              <div style="display: flex; gap: 6px;">
+                <button class="btn-ghost-outline btn-xs mono" id="btn-val-add-cycle">+ Add Cycle</button>
+                <button class="btn-ghost-outline btn-xs mono" id="btn-val-toggle-csv">Paste CSV</button>
+                <button class="btn-ghost-outline btn-xs mono" id="btn-val-clear-script">Clear Script</button>
+              </div>
+            </div>
+
+            <!-- CSV Paste Window (Hidden by default) -->
+            <div class="val-csv-paste-wrap mono" id="val-csv-paste-wrap" style="display: none; margin-top: 8px;">
+              <textarea id="val-csv-paste-area" class="val-textarea mono" placeholder="Paste CSV: cycle,price_source1,price_source2,borrow_amount,repay_amount..."></textarea>
+              <div style="margin-top: 6px; display: flex; gap: 8px;">
+                <button class="m-btn-terminal m-btn-primary btn-xs" id="btn-val-apply-csv">Load Script from CSV</button>
+                <button class="btn-ghost-outline btn-xs mono" id="btn-val-cancel-csv">Cancel</button>
+              </div>
+            </div>
+
+            <div class="table-responsive" style="margin-top: 8px; max-height: 280px; overflow-y: auto;">
+              <table class="m-data-table mono" id="val-script-table">
+                <thead>
+                  <tr>
+                    <th>Cycle</th>
+                    <th>Prices (ID: Price)</th>
+                    <th>Depths (ID: Depth)</th>
+                    <th>Offline Sources</th>
+                    <th>Borrow ($)</th>
+                    <th>Repay ($)</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="val-script-tbody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Action Run Bar -->
+          <div class="val-run-bar" style="margin-top: 18px;">
+            <button class="m-btn-terminal m-btn-primary" id="btn-do-run-validator" style="font-size: 13px; padding: 8px 24px;">
+              &#9654; RUN VALIDATOR (EVM SNAPSHOT)
+            </button>
+            <span class="mono text-ash" id="val-run-status-text" style="font-size: 12px; margin-left: 12px;">
+              Ready. State will be snapshot &amp; reverted automatically.
+            </span>
+          </div>
+
+          <!-- Execution Results Panel -->
+          <div class="val-results-panel" id="val-results-panel" style="display: none; margin-top: 20px;">
+            <div class="val-results-header">
+              <span class="mono-label text-cyan font-bold" style="font-size: 12px;">EXECUTION RESULTS &amp; CONTRACT VERDICT</span>
+              <span class="tag-green mono font-bold" id="val-res-classification-badge">CAUGHT</span>
+            </div>
+
+            <!-- Invariant Verdict Banner -->
+            <div class="val-verdict-card" id="val-res-verdict-card">
+              <div class="verdict-icon" id="val-res-verdict-icon">&#10003;</div>
+              <div class="verdict-body mono">
+                <div class="verdict-title font-bold" id="val-res-verdict-title">INVARIANT VERDICT: HOLDS</div>
+                <div class="verdict-desc text-ash" id="val-res-verdict-desc">
+                  Holds for all m &le; mRef. Safety factor k strictly bounds extractable borrow below attacker net loss.
+                </div>
+              </div>
+            </div>
+
+            <!-- Metric Cards Grid -->
+            <div class="val-metrics-grid mono" style="margin-top: 12px;">
+              <div class="val-metric-box">
+                <span class="val-m-label text-fog">States Reached:</span>
+                <span class="val-m-val text-cloud" id="val-res-states-flow">FRESH &rarr; PROTECTIVE</span>
+              </div>
+              <div class="val-metric-box">
+                <span class="val-m-label text-fog">First Alert Cycle:</span>
+                <span class="val-m-val text-cyan" id="val-res-first-alert">Cycle 3 (Lag: 0 cycles)</span>
+              </div>
+              <div class="val-metric-box">
+                <span class="val-m-label text-fog">Attacker Net Cost:</span>
+                <span class="val-m-val text-cloud" id="val-res-net-cost">$ 1,257,076</span>
+              </div>
+              <div class="val-metric-box">
+                <span class="val-m-label text-fog">Max Extra Borrow:</span>
+                <span class="val-m-val text-cloud" id="val-res-extra-borrow">$ 120,000</span>
+              </div>
+              <div class="val-metric-box">
+                <span class="val-m-label text-fog">Net Result:</span>
+                <span class="val-m-val text-green font-bold" id="val-res-net-result">-$ 1,137,076 (ATTACK LOSES MONEY)</span>
+              </div>
+              <div class="val-metric-box">
+                <span class="val-m-label text-fog">Loss Allowed by Cap:</span>
+                <span class="val-m-val text-iris font-bold" id="val-res-loss-allowed">$ 0 / $ 117.8M (100% prevented)</span>
+              </div>
+            </div>
+
+            <!-- Per-Cycle Telemetry Audit Table -->
+            <div class="val-panel-section" style="margin-top: 16px;">
+              <div class="section-title-sm text-cloud font-bold">PER-CYCLE ON-CHAIN AUDIT TABLE</div>
+              <div class="table-responsive" style="margin-top: 8px;">
+                <table class="m-data-table mono" id="val-audit-table">
+                  <thead>
+                    <tr>
+                      <th>Cycle</th>
+                      <th>State</th>
+                      <th>Reason / Trigger</th>
+                      <th>W-Median</th>
+                      <th>TWAP</th>
+                      <th>Eff. Price</th>
+                      <th>C_cap ($)</th>
+                      <th>C_net ($)</th>
+                      <th>&Gamma; Cap ($)</th>
+                      <th>Total Debt</th>
+                      <th>Borrow Tx</th>
+                      <th>Repay Tx</th>
+                    </tr>
+                  </thead>
+                  <tbody id="val-audit-tbody">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ==================================================== -->
+        <!-- TAB 2: Parameter Sensitivity Sweep                   -->
+        <!-- ==================================================== -->
+        <div class="val-tab-pane" id="tab-val-sweep" style="display: none;">
+          <div class="val-panel-section">
+            <div class="val-section-header">
+              <span class="section-title-sm text-cloud font-bold">PARAMETER SENSITIVITY SWEEP</span>
+            </div>
+            <p class="panel-sub text-ash" style="margin-top: 2px;">
+              Choose one parameter and range. Evaluates every step through the deployed contracts and plots outcomes and threshold flip points.
+            </p>
+
+            <div class="val-sweep-controls mono" style="margin-top: 12px; display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;">
+              <div class="val-param-item">
+                <label>Parameter:</label>
+                <select id="val-sweep-param-select" class="m-mono-input" style="width: 170px;">
+                  <option value="k">Safety Factor k</option>
+                  <option value="rho">Net Loss Ratio &rho;</option>
+                  <option value="mRef">Reference Move mRef</option>
+                  <option value="g">Epoch Growth Share g</option>
+                  <option value="ltv">Max LTV</option>
+                </select>
+              </div>
+              <div class="val-param-item">
+                <label>Min value:</label>
+                <input type="number" id="val-sweep-min" value="0.02" step="0.01" class="m-mono-input" style="width: 90px;" />
+              </div>
+              <div class="val-param-item">
+                <label>Max value:</label>
+                <input type="number" id="val-sweep-max" value="0.30" step="0.01" class="m-mono-input" style="width: 90px;" />
+              </div>
+              <div class="val-param-item">
+                <label>Steps:</label>
+                <input type="number" id="val-sweep-steps" value="10" step="1" class="m-mono-input" style="width: 70px;" />
+              </div>
+              <button class="m-btn-terminal m-btn-primary btn-xs" id="btn-do-run-sweep" style="padding: 6px 16px;">
+                &#9654; Run Sweep
+              </button>
+            </div>
+
+            <!-- Sweep Flip Point Alert Banner -->
+            <div class="val-sweep-flip-card mono" id="val-sweep-flip-card" style="display: none; margin-top: 14px;">
+              <span class="text-orchid font-bold">THRESHOLD FLIP POINT:</span>
+              <span class="text-cloud" id="val-sweep-flip-text">Invariant flips from HOLDS to FAILS at k = 0.1412</span>
+            </div>
+
+            <!-- Sweep Results Table -->
+            <div class="table-responsive" style="margin-top: 12px; max-height: 280px; overflow-y: auto;">
+              <table class="m-data-table mono" id="val-sweep-table">
+                <thead>
+                  <tr>
+                    <th>Parameter Value</th>
+                    <th>Invariant Holds?</th>
+                    <th>&Gamma; Cap ($)</th>
+                    <th>Final State</th>
+                    <th>Attacker Net Result</th>
+                    <th>Classification</th>
+                  </tr>
+                </thead>
+                <tbody id="val-sweep-tbody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ==================================================== -->
+        <!-- TAB 3: Run Log & Wilson Statistics                   -->
+        <!-- ==================================================== -->
+        <div class="val-tab-pane" id="tab-val-log" style="display: none;">
+          <div class="val-panel-section">
+            <div class="val-section-header">
+              <span class="section-title-sm text-cloud font-bold">STATISTICAL CLASSIFICATION SUMMARY</span>
+              <div style="display: flex; gap: 8px;">
+                <a href="http://localhost:5001/validator/export-csv" download class="btn-ghost-outline btn-xs mono">
+                  &darr; Export CSV
+                </a>
+                <button class="btn-ghost-outline btn-xs mono" id="btn-val-clear-log">Clear Log</button>
+              </div>
+            </div>
+
+            <!-- Metrics with Wilson 95% Confidence Intervals -->
+            <div class="confusion-grid mono" style="margin-top: 10px;">
+              <div class="conf-box">
+                <span class="conf-label">Total Evaluated Runs</span>
+                <span class="conf-val text-cloud font-bold" id="val-log-total-n">0</span>
+              </div>
+              <div class="conf-box">
+                <span class="conf-label">Missed Attacks</span>
+                <span class="conf-val text-green font-bold" id="val-log-missed-val">0 / 0 (0.0%)</span>
+                <span class="text-ash" style="font-size: 10px;" id="val-log-missed-ci">Wilson 95% CI: [0.0%, 0.0%]</span>
+              </div>
+              <div class="conf-box">
+                <span class="conf-label">False Alarms</span>
+                <span class="conf-val text-orchid font-bold" id="val-log-false-val">0 / 0 (0.0%)</span>
+                <span class="text-ash" style="font-size: 10px;" id="val-log-false-ci">Wilson 95% CI: [0.0%, 0.0%]</span>
+              </div>
+              <div class="conf-box">
+                <span class="conf-label">Bounded-Loss Defense</span>
+                <span class="conf-val text-cyan font-bold" id="val-log-defense-rate">100%</span>
+              </div>
+            </div>
+
+            <!-- Historical Runs Table -->
+            <div class="table-responsive" style="margin-top: 14px;">
+              <table class="m-data-table mono" id="val-runs-table">
+                <thead>
+                  <tr>
+                    <th>Run ID</th>
+                    <th>Time</th>
+                    <th>Label</th>
+                    <th>Classification</th>
+                    <th>States Reached</th>
+                    <th>Invariant</th>
+                    <th>Allowed Loss</th>
+                    <th>Prevented</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="val-runs-tbody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- Global Footer -->
+    <footer class="origin-footer">
+      <div class="footer-container">
+        <span class="mono-label">&copy; 2026 ORIGIN // ASO v2 &bull; MULTIPLI HACKATHON</span>
+        <span class="mono-label">BOUNDED-LOSS ORACLE ARCHITECTURE &bull; APACHE 2.0 / MIT</span>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

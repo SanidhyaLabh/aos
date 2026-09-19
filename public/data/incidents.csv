@@ -1,0 +1,5 @@
+id,name,date,protocol,lossRealWorldUsd,dataTag,asoAllowedBorrowUsd,preventedLossUsd,classification
+INC-2022-01,"Mango Markets",2022-10-11,"Mango Markets v3 (Solana)",116700000,SOURCED,168000,116532000,TRUE_POSITIVE
+INC-2026-01,"Venus Protocol",2026-03-04,"Venus Protocol (BNB Chain)",3700000,SOURCED,90000,3610000,TRUE_POSITIVE
+INC-2023-02,"Silo Finance (Isolated Pool)",2023-11-20,"Silo Finance",280000,RECONSTRUCTED,24000,256000,TRUE_POSITIVE
+INC-2020-01,"Compound DAI Liquidations",2020-11-26,"Compound Finance v2",89000000,SOURCED,240000,88760000,TRUE_POSITIVE
