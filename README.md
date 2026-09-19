@@ -57,6 +57,9 @@ reliability, accuracy and resilience.
 ## Interface Showcase
 
 ![Origin ASO Terminal](assets/demo/1.png)
+
+**Validator used for Mango Market Case in 2022**
+
 ![Origin ASO Validator](assets/demo/2.png)
 ![Origin ASO Validator](assets/demo/3.png)
 ![Origin ASO Validator](assets/demo/4.png)
