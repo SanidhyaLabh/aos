@@ -314,6 +314,32 @@ loss, not guaranteed safety):
 
 Requires [Foundry](https://book.getfoundry.sh/) v1.8.3 and Node ≥ 20.
 
+## ⚡ Quick Start (Windows One-Click Launcher)
+
+
+
+Double-click or run:
+
+```bat
+
+run.bat
+
+```
+
+This automatically starts:
+
+1. **Python Risk Engine Backend** on `http://localhost:5001`
+
+2. **Frontend Interactive Terminal** on `http://localhost:5173/terminal`
+
+3. Automatically launches `http://localhost:5173/terminal` in your default browser.
+
+
+
+---
+
+
+
 ```bash
 git clone --recurse-submodules https://github.com/AnantSharmaDev768/aso-sentinel.git
 cd aso-sentinel
