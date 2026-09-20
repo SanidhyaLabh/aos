@@ -141,17 +141,39 @@ Friction in ORIGIN is strictly one-directional:
 
 In addition to token-bucket rate limiting, the underlying **Risk Engine** evaluates whether an economic exploit is mathematically profitable under current market liquidity.
 
-### 1. The Fundamental Economic Security Theorem
-An oracle manipulation attack on a collateralized lending market is economically irrational if and only if the **net cost to manipulate the oracle ($C_{\text{net}}(m)$)** strictly exceeds the **maximum extractable unbacked debt ($E_{\text{borrow}}(m)$)**:
+### 1. The Fundamental Economic Exposure Bound
 
-$$\Pi_{\text{attack}}(m) = E_{\text{borrow}}(m) - C_{\text{net}}(m) < 0 \quad \forall m > 0$$
+ORIGIN does not assume that oracle manipulation is impossible or economically irrational. Instead, it establishes a hard upper bound on the amount of new debt that can be created through the protected borrowing path, regardless of the oracle-reported price:
+
+$$
+\Delta Debt_{\text{new}} \le C_{\max} + R\Delta t
+$$
 
 Where:
-- $m$: Proportional price manipulation/pump ($m = \frac{\Delta P}{P_0}$).
-- $C_{\text{net}}(m)$: Irreversible capital lost by the attacker to push the oracle price by $+m\%$.
-- $E_{\text{borrow}}(m)$: Maximum unbacked debt stolen above the true liquidation value of the posted collateral.
 
----
+- $C_{\max}$: maximum burst capacity available for new borrowing.
+- $R$: debt issuance refill rate per unit of time.
+- $\Delta t$: elapsed time since the relevant capacity was consumed.
+- $\Delta Debt_{\text{new}}$: cumulative new debt created through the protected path during that interval.
+
+Therefore, even if an attacker manipulates the collateral price upward, uses flash loans, creates multiple accounts, or submits many transactions, the maximum additional debt that can be created is bounded by the configured exposure budget:
+
+$$
+E_{\text{borrow}}(T) \le C_{\max} + R T
+$$
+
+This bound is independent of the number of attackers, accounts, transactions, or the oracle's reported value. ORIGIN therefore does not claim to prevent oracle manipulation or guarantee zero loss; instead, it prevents an oracle failure from producing unlimited new economic exposure and gives the protocol a bounded response window.
+
+For an assumed incident response window $T$:
+
+$$
+E_{\text{borrow,max}}(T) = C_{\max} + RT
+$$
+
+If the protocol configures $C_{\max}$ and $R$ such that:
+
+$$
+C_{\max} + RT \le B_{\text
 
 ### 2. Multi-Source Liquidity & Coalition Cost Derivation
 
