@@ -395,7 +395,22 @@ function updateTerminalUI() {
     }
 
     if (pctEl) {
-      pctEl.textContent = `${pct}%`;
+      pctEl.textContent = `${pct}% Full`;
+    }
+
+    const visualFill = document.getElementById("eeg-visual-fill");
+    if (visualFill) {
+      visualFill.style.width = `${pct}%`;
+      if (pct < 20) {
+        visualFill.style.background = "linear-gradient(90deg, #ef4444 0%, #dc2626 100%)";
+        visualFill.style.boxShadow = "0 0 12px rgba(239, 68, 68, 0.4)";
+      } else if (pct < 50) {
+        visualFill.style.background = "linear-gradient(90deg, #f59e0b 0%, #d97706 100%)";
+        visualFill.style.boxShadow = "0 0 12px rgba(245, 158, 11, 0.4)";
+      } else {
+        visualFill.style.background = "linear-gradient(90deg, #00f3ff 0%, #10b981 100%)";
+        visualFill.style.boxShadow = "0 0 12px rgba(0, 243, 255, 0.4)";
+      }
     }
 
     if (refillEl && eeg.refillRatePerSecond) {
@@ -665,8 +680,15 @@ function logCliEvent(msg) {
 // 7. SCENARIOS EXECUTION
 // ==========================================
 function setScenarioActive(btnId) {
-  document.querySelectorAll(".m-scen-btn").forEach(b => b.classList.remove("active"));
-  document.getElementById(btnId)?.classList.add("active");
+  document.querySelectorAll(".m-scen-btn, .eeg-demo-btn-card").forEach(b => {
+    b.classList.remove("active");
+    b.style.borderColor = "";
+  });
+  const el = document.getElementById(btnId);
+  if (el) {
+    el.classList.add("active");
+    el.style.borderColor = "#00f3ff";
+  }
 }
 
 async function runScenarioBaseline() {

@@ -491,198 +491,232 @@
     <!-- PAGE 2: MINIMAL TERMINAL (/terminal) — High-Impact ASCII-Style -->
     <!-- ═══════════════════════════════════════════════════════════ -->
     <div id="page-terminal" class="page-view">
-      <div class="minimal-terminal-container">
+      <div class="eeg-dashboard-container">
         
-        <!-- Header Bar -->
-        <div class="m-term-header">
-          <div class="m-term-title-block">
-            <span class="m-term-logo">ORIGIN // ASO</span>
-            <span class="m-term-sub">v3.1 Bounded-Loss Architecture</span>
-          </div>
-          
-          <div class="m-term-state-block">
-            <div class="m-term-badge badge-fresh" id="term-sentinel-badge">
-              <span class="badge-dot">●</span> <span id="term-badge-text">FRESH</span>
+        <!-- Top Clean Navigation Bar -->
+        <div class="eeg-top-nav">
+          <div class="eeg-brand-title">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="24" height="24" rx="6" fill="#000000"/>
+              <circle cx="12" cy="12" r="7" stroke="#00f3ff" stroke-width="2"/>
+              <circle cx="12" cy="12" r="2.5" fill="#10b981"/>
+            </svg>
+            <span class="eeg-logo-text mono">ORIGIN <span style="color:#6a6b6b; font-weight:400; font-size:14px;">// EEG</span></span>
+            <div class="eeg-status-pill mono" id="term-sentinel-badge">
+              <span class="eeg-status-dot">●</span> <span id="term-badge-text">GUARD ACTIVE</span>
             </div>
-            <div class="m-term-live-tag">live <span class="text-green font-bold">✓</span></div>
           </div>
 
-          <div class="m-term-nav-back">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <div class="mono" style="font-size: 11px; color: #9f9fa0;">
+              Oracle Spot: <span class="text-green font-bold" id="term-market-price">$ 100.02</span>
+            </div>
             <button class="btn-ghost-outline btn-xs" id="btn-term-back" data-route="/">
               &larr; Overview
             </button>
           </div>
         </div>
 
-        <div class="m-term-reason-line">
-          <span class="mono-label text-fog">reason:</span>
-          <span class="mono text-cyan" id="term-sentinel-reason">healthy consensus &bull; 4/4 sources reporting</span>
-        </div>
-
-        <div class="m-term-divider"></div>
-
-        <!-- Prices Row -->
-        <div class="m-term-prices-row">
-          <div class="m-price-col">
-            <div class="m-price-label">MARKET PRICE</div>
-            <div class="m-price-val mono" id="term-market-price">$ 100.02</div>
-            <div class="m-price-sub mono text-cyan" id="term-market-change">▲ +0.02% (last cycle)</div>
-          </div>
-          <div class="m-price-col">
-            <div class="m-price-label">LENDER USES</div>
-            <div class="m-price-val mono text-green" id="term-lender-price">$ 100.02</div>
-            <div class="m-price-sub mono text-fog" id="term-lender-desc">weighted median &bull; fresh</div>
-          </div>
-        </div>
-
-        <!-- Price Chart Canvas (Two Lines with Alert Shading) -->
-        <div class="m-term-chart-panel">
-          <div class="m-chart-header">
-            <div class="m-chart-legend">
-              <span class="legend-item"><span class="line-swatch swatch-market"></span> market</span>
-              <span class="legend-item"><span class="line-swatch swatch-lender"></span> lender uses</span>
-              <span class="legend-item" id="chart-alert-legend" style="display: none;"><span class="line-swatch swatch-alert"></span> state alert shading</span>
+        <!-- 1. HERO TOKEN BUCKET CARD (High-Impact Visualizer) -->
+        <div class="eeg-card eeg-card-glow-cyan">
+          <div class="eeg-card-header">
+            <div>
+              <div class="eeg-card-title text-cyan mono">🛡️ Economic Exposure Guard — Token Bucket Credit Meter</div>
+              <div class="mono text-fog" style="font-size: 11px; margin-top: 2px;">
+                Limits aggregate newly originated debt (<span class="text-cloud font-bold">&Delta;Debt &le; Capacity₀ + R_max &times; &Delta;t</span>)
+              </div>
             </div>
-            <div class="m-chart-coords mono text-ash" id="chart-hover-coord">t-0s &bull; $100.02</div>
+            <div class="mono" style="text-align: right;">
+              <span class="eeg-formula-badge" id="eeg-refill-rate-text">Refill: $25k / 15 min ($27.78/s)</span>
+            </div>
           </div>
-          <canvas id="minimal-terminal-chart" width="860" height="135" class="m-chart-canvas"></canvas>
+
+          <!-- Big Stat Numbers -->
+          <div class="eeg-stat-row">
+            <div>
+              <div class="mono text-fog" style="font-size: 11px; text-transform: uppercase; margin-bottom: 2px;">Available Borrowing Capacity</div>
+              <div class="eeg-big-stat text-green mono" id="eeg-capacity-text">$ 100,000 / $ 100,000 (100%)</div>
+            </div>
+            <div style="text-align: right;">
+              <div class="mono text-fog" style="font-size: 11px; text-transform: uppercase; margin-bottom: 2px;">Current Market Debt</div>
+              <div class="mono text-cloud font-bold" style="font-size: 20px;" id="term-debt-text">$ 0 / $ 500,000</div>
+            </div>
+          </div>
+
+          <!-- Visual Progress Track -->
+          <div class="eeg-meter-track">
+            <div class="eeg-meter-fill" id="eeg-visual-fill" style="width: 100%;"></div>
+          </div>
+
+          <!-- ASCII Meter & Percentage Row -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+            <span class="mono text-cyan" style="font-size: 11px;" id="eeg-ascii-bar">[████████████████████████████████████████]</span>
+            <span class="mono text-green font-bold" style="font-size: 12px;" id="eeg-pct">100% Full</span>
+          </div>
+
+          <!-- Pre-Flight Live Simulation Banner -->
+          <div class="m-preflight-box mono" id="eeg-preflight-box" style="margin-top: 14px; padding: 10px 14px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 6px; font-size: 12px; color: #10b981;">
+            ✓ Pre-flight: Protected capacity available ($2,900 &le; $100,000). Transaction will succeed in 1 tx.
+          </div>
         </div>
 
-        <!-- Borrow Limit & Debt Ceiling Bars -->
-        <div class="m-term-borrow-panel">
-          <div class="m-term-section-title">BORROW LIMIT</div>
+        <!-- 2. BORROW & REPAY ACTION CENTER -->
+        <div class="eeg-actions-grid">
           
-          <div class="m-bar-row">
-            <div class="m-bar-label-line">
-              <span class="mono text-cloud">Debt:</span>
-              <span class="mono text-iris font-bold" id="term-debt-text">$ 0 / $ 500,000 (gamma cap)</span>
-            </div>
-            <div class="m-ascii-progress-wrap">
-              <span class="m-ascii-bar mono" id="term-debt-ascii-bar">[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░]</span>
-              <span class="m-ascii-pct mono text-ash" id="term-debt-pct">0%</span>
-            </div>
-          </div>
-
-          <div class="m-bar-row" style="margin-top: 8px;">
-            <div class="m-bar-label-line">
-              <span class="mono text-cloud">Epoch growth:</span>
-              <span class="mono text-cyan font-bold" id="term-epoch-text">$ 0 / $ 100,000</span>
-            </div>
-            <div class="m-ascii-progress-wrap">
-              <span class="m-ascii-bar mono" id="term-epoch-ascii-bar">[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░]</span>
-              <span class="m-ascii-pct mono text-ash" id="term-epoch-pct">0%</span>
-            </div>
-          </div>
-
-          <!-- ORIGIN Economic Exposure Guard (EEG) Token-Bucket Meter -->
-          <div class="m-eeg-guard-panel" style="margin-top: 14px; padding: 12px; background: rgba(0, 243, 255, 0.03); border: 1px solid rgba(0, 243, 255, 0.2); border-radius: 4px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-              <span class="mono text-cyan font-bold" style="font-size: 11px; letter-spacing: 0.05em;">
-                🛡️ ECONOMIC EXPOSURE GUARD (EEG) — TOKEN BUCKET
-              </span>
-              <span class="mono text-fog" style="font-size: 10px;" id="eeg-refill-rate-text">
-                Refill: $25k / 15 min ($27.78/s)
-              </span>
-            </div>
-
-            <div class="m-bar-row">
-              <div class="m-bar-label-line">
-                <span class="mono text-cloud">Protected Capacity:</span>
-                <span class="mono text-green font-bold" id="eeg-capacity-text">$ 100,000 / $ 100,000 (100%)</span>
-              </div>
-              <div class="m-ascii-progress-wrap">
-                <span class="m-ascii-bar mono text-cyan" id="eeg-ascii-bar">[████████████████████████████████████████]</span>
-                <span class="m-ascii-pct mono text-green font-bold" id="eeg-pct">100%</span>
+          <!-- Borrow Column -->
+          <div class="eeg-card" style="margin-bottom: 0;">
+            <div class="eeg-input-group">
+              <label class="eeg-input-label mono text-cloud font-bold">Borrow Against Collateral</label>
+              <div class="eeg-input-wrapper">
+                <span class="eeg-input-prefix">$</span>
+                <input type="number" id="input-borrow-amount" value="2900" step="500" class="eeg-input-field" placeholder="Enter borrow amount" />
               </div>
             </div>
 
-            <div class="m-preflight-box mono" id="eeg-preflight-box" style="margin-top: 8px; font-size: 10.5px; padding: 4px 8px; background: rgba(16, 185, 129, 0.1); border-radius: 3px; color: #10b981;">
-              ✓ Pre-flight: Protected capacity available ($10,000 &le; $100,000)
-            </div>
-          </div>
-
-          <!-- Borrow & Repay Interactive Inputs -->
-          <div class="m-actions-row">
-            <div class="m-action-group">
-              <span class="mono text-fog font-bold">Try borrow:</span>
-              <div class="m-input-bracket">
-                <span class="bracket">(</span>
-                <input type="number" id="input-borrow-amount" value="10000" step="1000" class="m-mono-input" />
-                <span class="bracket">)</span>
-              </div>
-              <button class="m-btn-terminal m-btn-primary" id="btn-do-borrow">Borrow</button>
+            <!-- Quick Preset Chips -->
+            <div class="eeg-chip-row">
+              <button class="eeg-chip-btn" onclick="document.getElementById('input-borrow-amount').value='2900'; document.getElementById('input-borrow-amount').dispatchEvent(new Event('input'));">+$2.9k (Normal)</button>
+              <button class="eeg-chip-btn" onclick="document.getElementById('input-borrow-amount').value='10000'; document.getElementById('input-borrow-amount').dispatchEvent(new Event('input'));">+$10k</button>
+              <button class="eeg-chip-btn" onclick="document.getElementById('input-borrow-amount').value='50000'; document.getElementById('input-borrow-amount').dispatchEvent(new Event('input'));">+$50k</button>
+              <button class="eeg-chip-btn exploit-chip" onclick="document.getElementById('input-borrow-amount').value='10000000'; document.getElementById('input-borrow-amount').dispatchEvent(new Event('input'));">+$10M (Exploit)</button>
             </div>
 
-            <div class="m-action-group">
-              <span class="mono text-fog font-bold">Repay:</span>
-              <div class="m-input-bracket">
-                <span class="bracket">(</span>
-                <input type="number" id="input-repay-amount" value="5000" step="1000" class="m-mono-input" />
-                <span class="bracket">)</span>
-              </div>
-              <button class="m-btn-terminal" id="btn-do-repay">Repay</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- 2-MINUTE JUDGE DEMO SEQUENCE -->
-        <div class="m-term-scenarios-bar" style="margin-top: 10px; background: rgba(168, 85, 247, 0.04); border: 1px solid rgba(168, 85, 247, 0.3);">
-          <div class="m-scen-label text-orchid font-bold mono">2-MIN DEMO:</div>
-          <div class="m-scen-buttons-group">
-            <button class="m-scen-btn" id="btn-demo-normal" title="Honest user $2,900 borrow (Succeeds in 1 tx)">1. Normal ($2.9k)</button>
-            <button class="m-scen-btn" id="btn-demo-exploit" title="+1000% Oracle pump & $10M drain attempt (Blocked on-chain)">2. $10M Exploit (REVERT)</button>
-            <button class="m-scen-btn" id="btn-demo-sybil" title="4 Wallets attempt to bypass limit (Shared capacity)">3. Sybil (4 Wallets)</button>
-            <button class="m-scen-btn" id="btn-demo-refill" title="Fast-forward time +15 min (Refills +$25k)">4. Refill (+15m)</button>
-            <button class="m-scen-btn" id="btn-demo-repay" title="Repay is 100% ungated">5. Repay</button>
-          </div>
-        </div>
-
-        <!-- Last Transaction Result -->
-        <div class="m-term-tx-panel">
-          <div class="m-term-section-title">LAST TX RESULT:</div>
-          <div class="m-tx-result-box mono" id="term-last-tx-box">
-            Confirmed &bull; Borrowed $10,000 &bull; Oracle price: $100.02
-          </div>
-        </div>
-
-        <!-- Attack Economics (15% push) -->
-        <div class="m-term-econ-panel">
-          <div class="m-term-section-title">ATTACK ECONOMICS (15% push)</div>
-          <div class="m-econ-grid">
-            <div class="m-econ-row">
-              <span class="m-econ-k text-fog">Attacker net cost:</span>
-              <span class="m-econ-v mono text-cloud" id="term-econ-cost">$ 1,260,000</span>
-            </div>
-            <div class="m-econ-row">
-              <span class="m-econ-k text-fog">Max extra borrow:</span>
-              <span class="m-econ-v mono text-cloud" id="term-econ-borrow">$ 120,000</span>
-            </div>
-            <div class="m-econ-row">
-              <span class="m-econ-k text-fog">Net result:</span>
-              <span class="m-econ-v mono text-green font-bold" id="term-econ-result">-$ 1,140,000 (ATTACK LOSES MONEY)</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Scenarios Bar & Details Drawer Toggle -->
-        <div class="m-term-scenarios-bar">
-          <div class="m-scen-label text-fog font-bold mono">SCENARIOS:</div>
-          <div class="m-scen-buttons-group">
-            <button class="m-scen-btn active" id="btn-scen-baseline">Baseline</button>
-            <button class="m-scen-btn" id="btn-scen-thin">Thin pump</button>
-            <button class="m-scen-btn" id="btn-scen-squeeze">Deep squeeze</button>
-            <button class="m-scen-btn" id="btn-scen-kill">Kill source</button>
-            <button class="m-scen-btn" id="btn-scen-pull">Pull liquidity</button>
-            <button class="m-scen-btn" id="btn-scen-recover">Recover</button>
-          </div>
-          <div class="m-scen-right-actions" style="margin-left: auto; display: flex; gap: 8px;">
-            <button class="m-btn-validator" id="btn-open-validator">
-              [Validator &#9881;]
-            </button>
-            <button class="m-btn-details" id="btn-toggle-details">
-              [Details &#9654;]
+            <button class="eeg-btn-action eeg-btn-borrow" id="btn-do-borrow">
+              Confirm Borrow Transaction &rarr;
             </button>
           </div>
+
+          <!-- Repay Column -->
+          <div class="eeg-card" style="margin-bottom: 0;">
+            <div class="eeg-input-group">
+              <label class="eeg-input-label mono text-cloud font-bold">Repay Debt (100% Ungated)</label>
+              <div class="eeg-input-wrapper">
+                <span class="eeg-input-prefix">$</span>
+                <input type="number" id="input-repay-amount" value="2900" step="500" class="eeg-input-field" placeholder="Enter repay amount" />
+              </div>
+            </div>
+
+            <!-- Quick Preset Chips -->
+            <div class="eeg-chip-row">
+              <button class="eeg-chip-btn" onclick="document.getElementById('input-repay-amount').value='2900';">+$2.9k</button>
+              <button class="eeg-chip-btn" onclick="document.getElementById('input-repay-amount').value='5000';">+$5.0k</button>
+              <button class="eeg-chip-btn" onclick="document.getElementById('input-repay-amount').value='10000';">+$10k</button>
+            </div>
+
+            <button class="eeg-btn-action eeg-btn-repay" id="btn-do-repay">
+              Confirm Debt Repayment &rarr;
+            </button>
+
+            <div class="mono" style="margin-top: 10px; font-size: 10px; color: #a855f7;">
+              🛡️ <b>Anti-Churn Invariant:</b> Repaying debt never refills the token bucket (defeats flash-loan looping).
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 3. INTERACTIVE 2-MINUTE JUDGE DEMO SEQUENCE -->
+        <div class="eeg-card" style="background: rgba(168, 85, 247, 0.03); border-color: rgba(168, 85, 247, 0.3);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <span class="mono text-orchid font-bold" style="font-size: 12px; letter-spacing: 0.06em;">
+              ⭐ 2-MINUTE JUDGE DEMO SEQUENCE (CLICK IN ORDER 1 &rarr; 5)
+            </span>
+            <span class="mono text-ash" style="font-size: 10.5px;">1-Click Automated Attacks &amp; Defenses</span>
+          </div>
+
+          <div class="eeg-demo-grid">
+            
+            <!-- Demo 1 -->
+            <div class="eeg-demo-btn-card card-1" id="btn-demo-normal">
+              <div>
+                <div class="eeg-demo-card-step mono text-green">Step 1 &bull; 0:00-0:20</div>
+                <div class="eeg-demo-card-title">Normal ($2.9k)</div>
+                <div class="eeg-demo-card-desc">Honest borrower takes $2.9k. Succeeds in 1 tx with zero extra friction.</div>
+              </div>
+            </div>
+
+            <!-- Demo 2 -->
+            <div class="eeg-demo-btn-card card-2" id="btn-demo-exploit">
+              <div>
+                <div class="eeg-demo-card-step mono text-rose">Step 2 &bull; 0:20-0:45</div>
+                <div class="eeg-demo-card-title">$10M Exploit</div>
+                <div class="eeg-demo-card-desc">+1000% Oracle pump &amp; $10M drain attempt. On-chain REVERT.</div>
+              </div>
+            </div>
+
+            <!-- Demo 3 -->
+            <div class="eeg-demo-btn-card card-3" id="btn-demo-sybil">
+              <div>
+                <div class="eeg-demo-card-step mono text-amber">Step 3 &bull; 0:45-1:15</div>
+                <div class="eeg-demo-card-title">Sybil (4 Wallets)</div>
+                <div class="eeg-demo-card-desc">4 wallets attempt concurrent split. Shared capacity halts 3 &amp; 4.</div>
+              </div>
+            </div>
+
+            <!-- Demo 4 -->
+            <div class="eeg-demo-btn-card card-4" id="btn-demo-refill">
+              <div>
+                <div class="eeg-demo-card-step mono text-cyan">Step 4 &bull; 1:15-1:40</div>
+                <div class="eeg-demo-card-title">Time Warp (+15m)</div>
+                <div class="eeg-demo-card-desc">Advances EVM time +15 min. Restores +$25k linearly.</div>
+              </div>
+            </div>
+
+            <!-- Demo 5 -->
+            <div class="eeg-demo-btn-card card-5" id="btn-demo-repay">
+              <div>
+                <div class="eeg-demo-card-step mono text-orchid">Step 5 &bull; 1:40-2:00</div>
+                <div class="eeg-demo-card-title">Repay (Anti-Churn)</div>
+                <div class="eeg-demo-card-desc">Repay is 100% ungated and does NOT artificially refill capacity.</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 4. LIVE TRANSACTION & SECURITY AUDIT FEED -->
+        <div class="eeg-card eeg-tx-log-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span class="mono-label text-fog font-bold">LATEST ON-CHAIN TRANSACTION RECEIPT</span>
+            <span class="mono text-ash" style="font-size: 10px;">EVM Chain ID: 31337</span>
+          </div>
+          <div class="m-tx-result-box mono" id="term-last-tx-box" style="margin: 0; min-height: 42px;">
+            Confirmed &bull; Borrowed $2,900 &bull; Oracle price: $100.02
+          </div>
+        </div>
+
+        <!-- Optional Technical Drill-Down Toggle -->
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+          <button class="m-btn-validator mono" id="btn-open-validator" style="font-size: 11px; padding: 6px 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color:#cacaca; border-radius: 6px; cursor: pointer;">
+            ⚙ Open Manual Risk Validator
+          </button>
+          <button class="m-btn-details mono" id="btn-toggle-details" style="font-size: 11px; padding: 6px 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color:#cacaca; border-radius: 6px; cursor: pointer;">
+            📋 System Inspector
+          </button>
+        </div>
+
+        <!-- Hidden elements kept for script compatibility -->
+        <div style="display: none;">
+          <span id="term-market-change"></span>
+          <span id="term-lender-price"></span>
+          <span id="term-lender-desc"></span>
+          <canvas id="minimal-terminal-chart" width="1" height="1"></canvas>
+          <span id="chart-alert-legend"></span>
+          <span id="chart-hover-coord"></span>
+          <span id="term-debt-ascii-bar"></span>
+          <span id="term-debt-pct"></span>
+          <span id="term-epoch-text"></span>
+          <span id="term-epoch-ascii-bar"></span>
+          <span id="term-epoch-pct"></span>
+          <span id="term-econ-cost"></span>
+          <span id="term-econ-borrow"></span>
+          <span id="term-econ-result"></span>
+          <span id="term-sentinel-reason"></span>
+          <button id="btn-scen-baseline"></button>
+          <button id="btn-scen-thin"></button>
+          <button id="btn-scen-squeeze"></button>
+          <button id="btn-scen-kill"></button>
+          <button id="btn-scen-pull"></button>
+          <button id="btn-scen-recover"></button>
         </div>
 
       </div>

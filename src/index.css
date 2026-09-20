@@ -5125,4 +5125,329 @@ body {
   border-color: var(--color-cyan-signal);
 }
 
+/* ==========================================================================
+   ORIGIN // EEG SIMPLIFIED MODERN DASHBOARD STYLES
+   ========================================================================== */
+.eeg-dashboard-container {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
+.eeg-top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  background: rgba(15, 16, 17, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.eeg-brand-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.eeg-logo-text {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+}
+
+.eeg-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #10b981;
+}
+
+.eeg-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: eegPulse 2s infinite ease-in-out;
+}
+
+@keyframes eegPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.eeg-card {
+  background: #0b0d10;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 22px;
+  margin-bottom: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.eeg-card-glow-cyan {
+  border-color: rgba(0, 243, 255, 0.25);
+  box-shadow: 0 10px 35px rgba(0, 243, 255, 0.04);
+}
+
+.eeg-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.eeg-card-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.eeg-stat-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.eeg-big-stat {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.eeg-stat-sub {
+  font-size: 12px;
+  color: #9f9fa0;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.eeg-meter-track {
+  width: 100%;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.eeg-meter-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #00f3ff 0%, #10b981 100%);
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+  box-shadow: 0 0 12px rgba(0, 243, 255, 0.4);
+}
+
+.eeg-formula-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  background: rgba(132, 125, 255, 0.08);
+  border: 1px solid rgba(132, 125, 255, 0.2);
+  border-radius: 6px;
+  font-size: 11px;
+  color: #d1c9ff;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.eeg-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 768px) {
+  .eeg-actions-grid { grid-template-columns: 1fr; }
+}
+
+.eeg-input-group {
+  margin-bottom: 12px;
+}
+
+.eeg-input-label {
+  display: block;
+  font-size: 11.5px;
+  color: #9f9fa0;
+  font-weight: 600;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.eeg-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.eeg-input-prefix {
+  position: absolute;
+  left: 14px;
+  color: #6a6b6b;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 600;
+}
+
+.eeg-input-field {
+  width: 100%;
+  padding: 12px 14px 12px 28px;
+  background: #050608;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  color: #ffffff;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 16px;
+  font-weight: 600;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.eeg-input-field:focus {
+  outline: none;
+  border-color: #00f3ff;
+  box-shadow: 0 0 0 2px rgba(0, 243, 255, 0.15);
+}
+
+.eeg-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
+
+.eeg-chip-btn {
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  font-size: 10.5px;
+  color: #cacaca;
+  font-family: 'Roboto Mono', monospace;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.eeg-chip-btn:hover {
+  background: rgba(0, 243, 255, 0.12);
+  border-color: #00f3ff;
+  color: #ffffff;
+}
+
+.eeg-chip-btn.exploit-chip:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.eeg-btn-action {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'Roboto Mono', monospace;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.eeg-btn-borrow {
+  background: #10b981;
+  color: #000000;
+}
+
+.eeg-btn-borrow:hover {
+  background: #059669;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+}
+
+.eeg-btn-repay {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.eeg-btn-repay:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: #ffffff;
+}
+
+/* 2-Minute Demo Cards Grid */
+.eeg-demo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.eeg-demo-btn-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.eeg-demo-btn-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.eeg-demo-btn-card.card-1:hover { border-color: #10b981; box-shadow: 0 6px 20px rgba(16, 185, 129, 0.15); }
+.eeg-demo-btn-card.card-2:hover { border-color: #ef4444; box-shadow: 0 6px 20px rgba(239, 68, 68, 0.15); }
+.eeg-demo-btn-card.card-3:hover { border-color: #f59e0b; box-shadow: 0 6px 20px rgba(245, 158, 11, 0.15); }
+.eeg-demo-btn-card.card-4:hover { border-color: #00f3ff; box-shadow: 0 6px 20px rgba(0, 243, 255, 0.15); }
+.eeg-demo-btn-card.card-5:hover { border-color: #a855f7; box-shadow: 0 6px 20px rgba(168, 85, 247, 0.15); }
+
+.eeg-demo-card-step {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+
+.eeg-demo-card-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.eeg-demo-card-desc {
+  font-size: 10.5px;
+  color: #9f9fa0;
+  line-height: 1.35;
+}
+
+.eeg-tx-log-card {
+  background: #050608;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 14px 18px;
+}
+
 
