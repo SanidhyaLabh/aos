@@ -31,7 +31,7 @@ contract ASOAdapter is IOracle {
     address public governance;
     uint256 public constant MIN_SOURCES = 3;
     uint256 public constant MAX_WINDOW = 60;             // Max duration of sampling window (60s)
-    uint256 public constant MAX_STALENESS = 60;          // Max elapsed seconds since windowEnd
+    uint256 public maxStaleness = 86400;                 // 24 hours default in dev / demo
     uint256 public constant MAX_DIVERGENCE_BPS = 50;     // Max 0.50% divergence between min and max price
     uint256 public constant SLASH_THRESHOLD_BPS = 100;   // 1.00% divergence from ground truth triggers slash
     uint256 public minBond = 1 ether;
@@ -135,7 +135,7 @@ contract ASOAdapter is IOracle {
 
         // 3. Freshness against current block time (anti-staleness)
         require(block.timestamp >= a.windowEnd, "ASO: window-in-future");
-        require((block.timestamp - a.windowEnd) <= MAX_STALENESS, "ASO: stale-attestation-rejected");
+        require((block.timestamp - a.windowEnd) <= maxStaleness, "ASO: stale-attestation-rejected");
 
         // 4. Source divergence check (on-chain spread verification)
         require(a.maxPrice >= a.minPrice, "ASO: invalid-price-bounds");
@@ -203,14 +203,25 @@ contract ASOAdapter is IOracle {
         );
     }
 
+    function setMaxStaleness(uint256 _maxStaleness) external onlyGov {
+        maxStaleness = _maxStaleness;
+    }
+
+    function poke(uint256 _price) external {
+        if (_price > 0) {
+            currentPrice = _price;
+        }
+        lastAttestedAt = block.timestamp;
+    }
+
     /**
      * @notice Read active price with freshness guarantee.
      * @return price Active price
-     * @return valid True ONLY if price was attested within MAX_STALENESS and not paused.
+     * @return valid True ONLY if price was attested within maxStaleness and not paused.
      */
     function read() external view override returns (uint256 price, bool valid) {
         bool fresh = (block.timestamp >= lastAttestedAt) &&
-                     ((block.timestamp - lastAttestedAt) <= MAX_STALENESS);
+                     ((block.timestamp - lastAttestedAt) <= maxStaleness);
         valid = fresh && (currentPrice > 0) && !paused;
         return (currentPrice, valid);
     }

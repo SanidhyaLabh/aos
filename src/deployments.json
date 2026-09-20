@@ -7,7 +7,7 @@
   },
   "contracts": {
     "ASOAdapter": {
-      "address": "0x5e988D9618a4d2681D899CC2fe8cdDC70EC92089",
+      "address": "0xa5543465883092C825D12698473838B50d84639f",
       "abi": [
         {
           "inputs": [
@@ -210,19 +210,6 @@
         {
           "inputs": [],
           "name": "MAX_DIVERGENCE_BPS",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "MAX_STALENESS",
           "outputs": [
             {
               "internalType": "uint256",
@@ -570,6 +557,19 @@
         },
         {
           "inputs": [],
+          "name": "maxStaleness",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "minBond",
           "outputs": [
             {
@@ -595,6 +595,19 @@
           "type": "function"
         },
         {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_price",
+              "type": "uint256"
+            }
+          ],
+          "name": "poke",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
           "inputs": [],
           "name": "read",
           "outputs": [
@@ -610,6 +623,19 @@
             }
           ],
           "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_maxStaleness",
+              "type": "uint256"
+            }
+          ],
+          "name": "setMaxStaleness",
+          "outputs": [],
+          "stateMutability": "nonpayable",
           "type": "function"
         },
         {
@@ -756,7 +782,7 @@
       ]
     },
     "VanillaOSM": {
-      "address": "0xA97eE2fcd36EC47E2ff3BbA33547878826BB806e",
+      "address": "0x71c77C6C7ea8e85FB92118C486CF95d13a79aDD2",
       "abi": [
         {
           "inputs": [
@@ -994,7 +1020,7 @@
       ]
     },
     "RiskEngine": {
-      "address": "0xF0E812fd6906362f945196712318D42b9Ba93197",
+      "address": "0x967e43B864Af2C5dc4Fb7da863E5bAd827Fb45B2",
       "abi": [
         {
           "inputs": [],
@@ -1692,7 +1718,7 @@
       ]
     },
     "ToyLendingMarketOSM": {
-      "address": "0xb7953ccdACBD3C16ad8A047C8d269C393ba184A0",
+      "address": "0x17Da9ebEcdEC74607c4dDD582c6db91A2b56b1d5",
       "abi": [
         {
           "inputs": [
@@ -2388,7 +2414,7 @@
       ]
     },
     "ToyLendingMarketASO": {
-      "address": "0x0b8C0bF10BB5D890C848467481EF7C9E645bFB79",
+      "address": "0x10c0f34aec31ee9C20519E710851620A904beDA5",
       "abi": [
         {
           "inputs": [
@@ -3084,7 +3110,7 @@
       ]
     },
     "SentinelRegistry": {
-      "address": "0x5a728a312897900d71Fa95F14468056E0c198F16",
+      "address": "0xf24078B040406e5FC3DC3E21f0CdF475e5A42c49",
       "abi": [
         {
           "inputs": [
@@ -3577,7 +3603,7 @@
       ]
     },
     "FrictionEngine": {
-      "address": "0xBc1eBf12De3AC0196Ee8B954C96DFfd686BbA1FD",
+      "address": "0x03470746a2599718fA55aca1bD1D41d161cf4E84",
       "abi": [
         {
           "inputs": [],
@@ -4081,7 +4107,7 @@
       ]
     },
     "EconomicExposureGuard": {
-      "address": "0xA3ef385C854F276146Ce002e74B65Cba4293969B",
+      "address": "0x2d929838d32Ea33a0994D37F82965C2d284E3b4F",
       "abi": [
         {
           "inputs": [
@@ -4408,5 +4434,5 @@
     "feeder": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
     "borrower": "0x90F79bf6EB2c4f870365E785982E1f101E93b906"
   },
-  "deployedAt": "2026-09-20T06:47:31.355Z"
+  "deployedAt": "2026-09-20T07:13:58.321Z"
 }

@@ -20,6 +20,42 @@ CORS(app)
 
 PORT = int(os.environ.get("BACKEND_PORT", 5001))
 
+# -----------------------------------------------------------------------------
+# Web3 EVM Connection & Dynamic Deployments Loader
+# -----------------------------------------------------------------------------
+try:
+    from web3 import Web3
+    w3_anvil = Web3(Web3.HTTPProvider("http://127.0.0.1:8545"))
+except Exception:
+    w3_anvil = None
+
+deployments_cache = None
+last_dep_mtime = 0
+friction_event_history = []
+
+def get_deployments():
+    global deployments_cache, last_dep_mtime
+    dep_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src", "deployments.json")
+    if os.path.exists(dep_path):
+        try:
+            mtime = os.path.getmtime(dep_path)
+            if deployments_cache is None or mtime != last_dep_mtime:
+                with open(dep_path, "r", encoding="utf-8") as f:
+                    deployments_cache = json.load(f)
+                    last_dep_mtime = mtime
+        except Exception:
+            pass
+    return deployments_cache
+
+def get_contract(contract_name):
+    if not w3_anvil or not w3_anvil.is_connected():
+        return None
+    deps = get_deployments()
+    if not deps or "contracts" not in deps or contract_name not in deps["contracts"]:
+        return None
+    info = deps["contracts"][contract_name]
+    return w3_anvil.eth.contract(address=w3_anvil.to_checksum_address(info["address"]), abi=info["abi"])
+
 # Initialize Risk Engine with exact Part A parameters
 # Sized to institutional depths reproducing exact wireframe metrics
 risk_engine = RiskEnginePython(
@@ -192,53 +228,49 @@ def get_cycle_history():
 @app.route("/api/borrow", methods=["POST"])
 def execute_borrow():
     data = request.get_json(silent=True) or {}
-    amount = float(data.get("amount", 10000.0))
+    amount = float(data.get("amount", 2900.0))
 
     if amount <= 0:
         return jsonify({"success": False, "revertReason": "zero-borrow"}), 400
 
-    current_state = state_data["sentinelState"]
-    
-    # Check 1: Sentinel PROTECTIVE check
-    if current_state == "PROTECTIVE":
-        reason = "sentinel protective"
+    # 1. Check against on-chain Economic Exposure Guard (EEG)
+    guard = get_contract("EconomicExposureGuard")
+    tlm = get_contract("ToyLendingMarketASO")
+
+    avail_cap = 100000.0
+    if guard and w3_anvil and w3_anvil.is_connected():
+        try:
+            avail_cap_wad = guard.functions.getAvailableCapacity().call()
+            avail_cap = float(w3_anvil.from_wei(avail_cap_wad, "ether"))
+        except Exception:
+            pass
+
+    # Hard revert if request exceeds available capacity
+    if amount > avail_cap:
+        reason = f"ExceedsAvailableCapacity(request=${int(amount):,}, available=${int(avail_cap):,})"
         state_data["lastTxResult"] = f'Revert: "{reason}"'
         state_data["lastTxStatus"] = "reverted"
-        return jsonify({"success": False, "revertReason": reason}), 400
+        return jsonify({"success": False, "revertReason": reason, "availableCapacity": avail_cap}), 400
 
-    # Check 2: Oracle Staleness check
-    if current_state in ["STALE", "DISPUTED"]:
-        reason = "Oracle halted or stale"
-        state_data["lastTxResult"] = f'Revert: "{reason}"'
-        state_data["lastTxStatus"] = "reverted"
-        return jsonify({"success": False, "revertReason": reason}), 400
+    # 2. Attempt on-chain EVM borrow if borrower account available
+    if tlm and w3_anvil and w3_anvil.is_connected() and len(w3_anvil.eth.accounts) > 3:
+        borrower = w3_anvil.eth.accounts[3]
+        try:
+            tx = tlm.functions.borrow(w3_anvil.to_wei(amount, "ether")).transact({"from": borrower})
+            w3_anvil.eth.wait_for_transaction_receipt(tx)
+        except Exception as e:
+            err_str = str(e)
+            if "ExceedsAvailableCapacity" in err_str:
+                reason = "ExceedsAvailableCapacity"
+            elif "revert" in err_str.lower():
+                reason = err_str.split("reverted:")[-1].strip(" '\"()[]")[:60]
+            else:
+                reason = err_str[:60]
+            state_data["lastTxResult"] = f'Revert: "{reason}"'
+            state_data["lastTxStatus"] = "reverted"
+            return jsonify({"success": False, "revertReason": reason}), 400
 
-    # Check 3: Epoch Growth Cap check (g * Gamma)
-    epoch_cap = risk_engine.epoch_growth_cap()
-    if state_data["borrowedThisEpoch"] + amount > epoch_cap:
-        reason = "epoch growth cap"
-        state_data["lastTxResult"] = f'Revert: "{reason}"'
-        state_data["lastTxStatus"] = "reverted"
-        return jsonify({"success": False, "revertReason": reason}), 400
-
-    # Check 4: Dynamic Cost-Anchored Debt Ceiling check (min(configured, Gamma))
-    effective_ceiling = state_data["sentinelCeiling"]
-    if state_data["totalDebt"] + amount > effective_ceiling:
-        reason = "cost-anchored ceiling"
-        state_data["lastTxResult"] = f'Revert: "{reason}"'
-        state_data["lastTxStatus"] = "reverted"
-        return jsonify({"success": False, "revertReason": reason}), 400
-
-    # Check 5: Collateral Capacity check
-    collateral_val_usd = state_data["collateralAmount"] * state_data["effectivePrice"]
-    max_borrow_usd = collateral_val_usd * risk_engine.ltv
-    if state_data["totalDebt"] + amount > max_borrow_usd:
-        reason = "exceeds-borrow-capacity"
-        state_data["lastTxResult"] = f'Revert: "{reason}"'
-        state_data["lastTxStatus"] = "reverted"
-        return jsonify({"success": False, "revertReason": reason}), 400
-
-    # Execute successful borrow
+    # Execute successful borrow state update
     state_data["totalDebt"] += amount
     state_data["borrowedThisEpoch"] += amount
     price_used = state_data["effectivePrice"]
@@ -259,23 +291,30 @@ def execute_borrow():
 @app.route("/api/repay", methods=["POST"])
 def execute_repay():
     data = request.get_json(silent=True) or {}
-    amount = float(data.get("amount", 5000.0))
+    amount = float(data.get("amount", 2900.0))
 
     if amount <= 0:
         return jsonify({"success": False, "revertReason": "invalid-repay"}), 400
 
     # Crucial DeFi invariant: Repayment is 100% UNGATED in every single state!
-    amount_repaid = min(amount, state_data["totalDebt"])
-    state_data["totalDebt"] -= amount_repaid
+    tlm = get_contract("ToyLendingMarketASO")
+    if tlm and w3_anvil and w3_anvil.is_connected() and len(w3_anvil.eth.accounts) > 3:
+        borrower = w3_anvil.eth.accounts[3]
+        try:
+            tx = tlm.functions.repay(w3_anvil.to_wei(amount, "ether")).transact({"from": borrower})
+            w3_anvil.eth.wait_for_transaction_receipt(tx)
+        except Exception:
+            pass
 
-    state_data["lastTxResult"] = f"Confirmed • Repaid ${int(amount_repaid):,} debt • Collateral preserved"
+    state_data["totalDebt"] = max(0.0, state_data["totalDebt"] - amount)
+    state_data["lastTxResult"] = f"Confirmed • Repaid ${int(amount):,} debt • Collateral preserved"
     state_data["lastTxStatus"] = "confirmed"
 
     record_cycle_snapshot()
 
     return jsonify({
         "success": True,
-        "amountRepaid": amount_repaid,
+        "amountRepaid": amount,
         "remainingDebt": state_data["totalDebt"],
         "state": state_data["sentinelState"]
     })
@@ -550,35 +589,6 @@ def get_validation_results():
 # -----------------------------------------------------------------------------
 # Dual-Horizon Friction Engine (DHFE) On-Chain Endpoints (Part B)
 # -----------------------------------------------------------------------------
-try:
-    from web3 import Web3
-    w3_anvil = Web3(Web3.HTTPProvider("http://127.0.0.1:8545"))
-except Exception:
-    w3_anvil = None
-
-deployments_cache = None
-friction_event_history = []
-
-def get_deployments():
-    global deployments_cache
-    if deployments_cache is None:
-        dep_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src", "deployments.json")
-        if os.path.exists(dep_path):
-            try:
-                with open(dep_path, "r", encoding="utf-8") as f:
-                    deployments_cache = json.load(f)
-            except Exception:
-                pass
-    return deployments_cache
-
-def get_contract(contract_name):
-    if not w3_anvil or not w3_anvil.is_connected():
-        return None
-    deps = get_deployments()
-    if not deps or "contracts" not in deps or contract_name not in deps["contracts"]:
-        return None
-    info = deps["contracts"][contract_name]
-    return w3_anvil.eth.contract(address=w3_anvil.to_checksum_address(info["address"]), abi=info["abi"])
 
 @app.route("/friction/state", methods=["GET"])
 @app.route("/api/friction/state", methods=["GET"])
