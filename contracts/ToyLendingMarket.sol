@@ -13,6 +13,17 @@ interface IRiskEngine {
     function epochGrowthCap() external view returns (uint256);
 }
 
+interface IFrictionEngine {
+    function computeFriction(address borrower, uint256 x) external view returns (uint256 fInst, uint256 fCum, uint256 fFinal);
+    function effectiveRate(uint256 baseRate, uint256 fFinal) external view returns (uint256);
+    function updateExposure(address borrower, uint256 amount) external returns (uint256);
+}
+
+interface IEconomicExposureGuard {
+    function consumeCapacity(uint256 amount) external returns (uint256 remainingCapacity);
+    function getAvailableCapacity() external view returns (uint256);
+}
+
 /**
  * @title ToyLendingMarket (v2 / v3.1)
  * @notice Downstream credit facility with bounded-loss epoch caps & cost-gated pricing.
@@ -20,15 +31,19 @@ interface IRiskEngine {
  * 1. Hard maximum borrow growth per epoch (epoch loss budget / epoch growth cap)
  * 2. Dynamic cost-anchored debt ceiling (Gamma = k * C_net(mRef) / mRef)
  * 3. Sentinel protective state enforcement
- * 4. Ungated repayments in every state
+ * 4. Dual-Horizon Friction Engine (DHFE) structuring-resistant rate pricing
+ * 5. Ungated repayments in every state
  */
 contract ToyLendingMarket {
     IOracle public oracle;
     string public oracleType; // "VanillaOSM" or "ASOAdapter"
     address public sentinel;
     address public riskEngine;
+    address public frictionEngine;
+    address public exposureGuard;
     address public governance;
 
+    uint256 public baseRate = 0.05 ether;                // 5.00% base interest rate (18 decimals)
     uint256 public constant LTV_BPS = 8000;              // 80.00% Max Loan-to-Value
     uint256 public constant LIQUIDATION_BPS = 8500;       // 85.00% Liquidation threshold
     uint256 public constant BPS_DENOMINATOR = 10000;
@@ -58,6 +73,13 @@ contract ToyLendingMarket {
     event Repaid(address indexed user, uint256 amount);
     event OracleUpdated(address indexed newOracle, string oracleType);
     event EpochCapUpdated(uint256 newCap, uint256 newDuration);
+    event FrictionApplied(
+        address indexed user,
+        uint256 fInst,
+        uint256 fCum,
+        uint256 fFinal,
+        uint256 effectiveRate
+    );
 
     modifier onlyGov() {
         require(msg.sender == governance, "Lending: not-governance");
@@ -82,6 +104,18 @@ contract ToyLendingMarket {
 
     function setRiskEngine(address _riskEngine) external onlyGov {
         riskEngine = _riskEngine;
+    }
+
+    function setFrictionEngine(address _frictionEngine) external onlyGov {
+        frictionEngine = _frictionEngine;
+    }
+
+    function setExposureGuard(address _exposureGuard) external onlyGov {
+        exposureGuard = _exposureGuard;
+    }
+
+    function setBaseRate(uint256 _baseRate) external onlyGov {
+        baseRate = _baseRate;
     }
 
     function setConfiguredDebtCeiling(uint256 _ceiling) external onlyGov {
@@ -178,6 +212,20 @@ contract ToyLendingMarket {
         uint256 maxBorrowUsd = (collateralValueUsd * LTV_BPS) / BPS_DENOMINATOR;
 
         require(pos.debtAmount + amount <= maxBorrowUsd, "exceeds-borrow-capacity");
+
+        // 5. Dual-Horizon Friction Engine (DHFE) pricing & structuring-resistant exposure update
+        if (frictionEngine != address(0)) {
+            (uint256 fInst, uint256 fCum, uint256 fFinal) = IFrictionEngine(frictionEngine)
+                .computeFriction(msg.sender, amount);
+            uint256 adjustedRate = IFrictionEngine(frictionEngine).effectiveRate(baseRate, fFinal);
+            IFrictionEngine(frictionEngine).updateExposure(msg.sender, amount);
+            emit FrictionApplied(msg.sender, fInst, fCum, fFinal, adjustedRate);
+        }
+
+        // 6. ORIGIN Economic Exposure Guard (EEG): Token-bucket aggregate new debt rate limit
+        if (exposureGuard != address(0)) {
+            IEconomicExposureGuard(exposureGuard).consumeCapacity(amount);
+        }
 
         // Update state
         borrowedInEpoch[msg.sender][epoch] += amount;

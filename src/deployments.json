@@ -7,7 +7,7 @@
   },
   "contracts": {
     "ASOAdapter": {
-      "address": "0xC557AdfbF68ef7e5c8D524A9D57709019d76f84C",
+      "address": "0x28311E167dd5DD9272dc8eE5143894d18423505E",
       "abi": [
         {
           "inputs": [
@@ -756,7 +756,7 @@
       ]
     },
     "VanillaOSM": {
-      "address": "0x641c1a78EBAe28B8AC165f7F9B0E41f4DD3C4f5B",
+      "address": "0x16e33c991900B3C9374b652e07116f2b26914d49",
       "abi": [
         {
           "inputs": [
@@ -994,7 +994,7 @@
       ]
     },
     "RiskEngine": {
-      "address": "0x9E1Aa060Ad2Af934a9aD876705E320063Dae1492",
+      "address": "0xe9d09ba1A22c632b174b24Bdd13b639151235652",
       "abi": [
         {
           "inputs": [],
@@ -1692,7 +1692,7 @@
       ]
     },
     "ToyLendingMarketOSM": {
-      "address": "0xdfFe9af87e026FF2B3d3790583C73c2E4dcDbb50",
+      "address": "0x383F54aDf5A35F7988e9D5CD8B6738e86E9A0a34",
       "abi": [
         {
           "inputs": [
@@ -1804,6 +1804,43 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "user",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "fInst",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "fCum",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "fFinal",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "effectiveRate",
+              "type": "uint256"
+            }
+          ],
+          "name": "FrictionApplied",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "newOracle",
               "type": "address"
             },
@@ -1865,6 +1902,19 @@
         {
           "inputs": [],
           "name": "LTV_BPS",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "baseRate",
           "outputs": [
             {
               "internalType": "uint256",
@@ -2036,6 +2086,32 @@
           "type": "function"
         },
         {
+          "inputs": [],
+          "name": "exposureGuard",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "frictionEngine",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
           "inputs": [
             {
               "internalType": "address",
@@ -2173,6 +2249,19 @@
           "inputs": [
             {
               "internalType": "uint256",
+              "name": "_baseRate",
+              "type": "uint256"
+            }
+          ],
+          "name": "setBaseRate",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
               "name": "_ceiling",
               "type": "uint256"
             }
@@ -2196,6 +2285,32 @@
             }
           ],
           "name": "setEpochCap",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_exposureGuard",
+              "type": "address"
+            }
+          ],
+          "name": "setExposureGuard",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_frictionEngine",
+              "type": "address"
+            }
+          ],
+          "name": "setFrictionEngine",
           "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
@@ -2273,7 +2388,7 @@
       ]
     },
     "ToyLendingMarketASO": {
-      "address": "0x4EA6A5664e9056a3499bbcE3367c5B6086EAC6F8",
+      "address": "0x333c0a395AD2c065cF7b8fb814EF4E7B4F9D2229",
       "abi": [
         {
           "inputs": [
@@ -2385,6 +2500,43 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "user",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "fInst",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "fCum",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "fFinal",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "effectiveRate",
+              "type": "uint256"
+            }
+          ],
+          "name": "FrictionApplied",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "newOracle",
               "type": "address"
             },
@@ -2446,6 +2598,19 @@
         {
           "inputs": [],
           "name": "LTV_BPS",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "baseRate",
           "outputs": [
             {
               "internalType": "uint256",
@@ -2617,6 +2782,32 @@
           "type": "function"
         },
         {
+          "inputs": [],
+          "name": "exposureGuard",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "frictionEngine",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
           "inputs": [
             {
               "internalType": "address",
@@ -2754,6 +2945,19 @@
           "inputs": [
             {
               "internalType": "uint256",
+              "name": "_baseRate",
+              "type": "uint256"
+            }
+          ],
+          "name": "setBaseRate",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
               "name": "_ceiling",
               "type": "uint256"
             }
@@ -2777,6 +2981,32 @@
             }
           ],
           "name": "setEpochCap",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_exposureGuard",
+              "type": "address"
+            }
+          ],
+          "name": "setExposureGuard",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_frictionEngine",
+              "type": "address"
+            }
+          ],
+          "name": "setFrictionEngine",
           "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
@@ -2854,7 +3084,7 @@
       ]
     },
     "SentinelRegistry": {
-      "address": "0x1c479EFFBa1950e31913338911efb4b4Ee84DD93",
+      "address": "0xC44B60E1517D56c8BE6C72AAFE0412D7d3c81B14",
       "abi": [
         {
           "inputs": [
@@ -3345,6 +3575,831 @@
           "type": "function"
         }
       ]
+    },
+    "FrictionEngine": {
+      "address": "0x6ecbc541f2fB1498b6b23772Ec1528dDdEdaDE64",
+      "abi": [
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "borrower",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "oldExposure",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "newExposure",
+              "type": "uint256"
+            }
+          ],
+          "name": "ExposureUpdated",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "newFallbackGamma",
+              "type": "uint256"
+            }
+          ],
+          "name": "FallbackGammaSet",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newLendingMarket",
+              "type": "address"
+            }
+          ],
+          "name": "LendingMarketSet",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "lambdaWad",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "kPhi",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "betaWad",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "nActiveBorrowers",
+              "type": "uint256"
+            }
+          ],
+          "name": "ParametersUpdated",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newRiskEngine",
+              "type": "address"
+            }
+          ],
+          "name": "RiskEngineSet",
+          "type": "event"
+        },
+        {
+          "inputs": [],
+          "name": "betaWad",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "fInst",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "fCum",
+              "type": "uint256"
+            }
+          ],
+          "name": "combinedFriction",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "borrower",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "x",
+              "type": "uint256"
+            }
+          ],
+          "name": "computeFriction",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "fInst",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "fCum",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "fFinal",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "projectedExposure",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "gammaVal",
+              "type": "uint256"
+            }
+          ],
+          "name": "cumulativeFriction",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "baseRate",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "fFinal",
+              "type": "uint256"
+            }
+          ],
+          "name": "effectiveRate",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "name": "ewmaExposure",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "fallbackGamma",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getGammaAndDebt",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "gammaVal",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "debtVal",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "governance",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "x",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "gammaVal",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "debtVal",
+              "type": "uint256"
+            }
+          ],
+          "name": "instantaneousFriction",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "kPhi",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "lambdaWad",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "lendingMarket",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "nActiveBorrowers",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "u",
+              "type": "uint256"
+            }
+          ],
+          "name": "phi",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "phiVal",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "riskEngine",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_gamma",
+              "type": "uint256"
+            }
+          ],
+          "name": "setFallbackGamma",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_gov",
+              "type": "address"
+            }
+          ],
+          "name": "setGovernance",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_market",
+              "type": "address"
+            }
+          ],
+          "name": "setLendingMarket",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_lambdaWad",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_kPhi",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_betaWad",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_nActiveBorrowers",
+              "type": "uint256"
+            }
+          ],
+          "name": "setParameters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_engine",
+              "type": "address"
+            }
+          ],
+          "name": "setRiskEngine",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "borrower",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "updateExposure",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ]
+    },
+    "EconomicExposureGuard": {
+      "address": "0xc4a80E21AdDeE7AF5637640Be0363Ae7adA123E4",
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_maxCapacity",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_refillRatePerSecond",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "requested",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "available",
+              "type": "uint256"
+            }
+          ],
+          "name": "DebtRateLimitExceeded",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "reason",
+              "type": "string"
+            }
+          ],
+          "name": "InvalidParameter",
+          "type": "error"
+        },
+        {
+          "inputs": [],
+          "name": "Unauthorized",
+          "type": "error"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "caller",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "remainingCapacity",
+              "type": "uint256"
+            }
+          ],
+          "name": "CapacityConsumed",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "newCapacity",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "elapsed",
+              "type": "uint256"
+            }
+          ],
+          "name": "CapacityReplenished",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousGov",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newGov",
+              "type": "address"
+            }
+          ],
+          "name": "GovernanceTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "market",
+              "type": "address"
+            }
+          ],
+          "name": "MarketSet",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "maxCapacity",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "refillRatePerSecond",
+              "type": "uint256"
+            }
+          ],
+          "name": "ParametersUpdated",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "consumeCapacity",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "remainingCapacity",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "currentCapacity",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getAvailableCapacity",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "available",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "governance",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "lastUpdateTimestamp",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "market",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "maxCapacity",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "refillRatePerSecond",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_newGov",
+              "type": "address"
+            }
+          ],
+          "name": "setGovernance",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_market",
+              "type": "address"
+            }
+          ],
+          "name": "setMarket",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_maxCapacity",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_refillRatePerSecond",
+              "type": "uint256"
+            }
+          ],
+          "name": "setParameters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "desiredAmount",
+              "type": "uint256"
+            }
+          ],
+          "name": "timeToRefill",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "secondsNeeded",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        }
+      ]
     }
   },
   "accounts": {
@@ -3353,5 +4408,5 @@
     "feeder": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
     "borrower": "0x90F79bf6EB2c4f870365E785982E1f101E93b906"
   },
-  "deployedAt": "2026-09-19T17:43:56.725Z"
+  "deployedAt": "2026-09-20T06:41:06.618Z"
 }

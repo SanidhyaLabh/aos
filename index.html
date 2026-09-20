@@ -574,6 +574,33 @@
             </div>
           </div>
 
+          <!-- ORIGIN Economic Exposure Guard (EEG) Token-Bucket Meter -->
+          <div class="m-eeg-guard-panel" style="margin-top: 14px; padding: 12px; background: rgba(0, 243, 255, 0.03); border: 1px solid rgba(0, 243, 255, 0.2); border-radius: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span class="mono text-cyan font-bold" style="font-size: 11px; letter-spacing: 0.05em;">
+                🛡️ ECONOMIC EXPOSURE GUARD (EEG) — TOKEN BUCKET
+              </span>
+              <span class="mono text-fog" style="font-size: 10px;" id="eeg-refill-rate-text">
+                Refill: $25k / 15 min ($27.78/s)
+              </span>
+            </div>
+
+            <div class="m-bar-row">
+              <div class="m-bar-label-line">
+                <span class="mono text-cloud">Protected Capacity:</span>
+                <span class="mono text-green font-bold" id="eeg-capacity-text">$ 100,000 / $ 100,000 (100%)</span>
+              </div>
+              <div class="m-ascii-progress-wrap">
+                <span class="m-ascii-bar mono text-cyan" id="eeg-ascii-bar">[████████████████████████████████████████]</span>
+                <span class="m-ascii-pct mono text-green font-bold" id="eeg-pct">100%</span>
+              </div>
+            </div>
+
+            <div class="m-preflight-box mono" id="eeg-preflight-box" style="margin-top: 8px; font-size: 10.5px; padding: 4px 8px; background: rgba(16, 185, 129, 0.1); border-radius: 3px; color: #10b981;">
+              ✓ Pre-flight: Protected capacity available ($10,000 &le; $100,000)
+            </div>
+          </div>
+
           <!-- Borrow & Repay Interactive Inputs -->
           <div class="m-actions-row">
             <div class="m-action-group">
@@ -595,6 +622,18 @@
               </div>
               <button class="m-btn-terminal" id="btn-do-repay">Repay</button>
             </div>
+          </div>
+        </div>
+
+        <!-- 2-MINUTE JUDGE DEMO SEQUENCE -->
+        <div class="m-term-scenarios-bar" style="margin-top: 10px; background: rgba(168, 85, 247, 0.04); border: 1px solid rgba(168, 85, 247, 0.3);">
+          <div class="m-scen-label text-orchid font-bold mono">2-MIN DEMO:</div>
+          <div class="m-scen-buttons-group">
+            <button class="m-scen-btn" id="btn-demo-normal" title="Honest user $2,900 borrow (Succeeds in 1 tx)">1. Normal ($2.9k)</button>
+            <button class="m-scen-btn" id="btn-demo-exploit" title="+1000% Oracle pump & $10M drain attempt (Blocked on-chain)">2. $10M Exploit (REVERT)</button>
+            <button class="m-scen-btn" id="btn-demo-sybil" title="4 Wallets attempt to bypass limit (Shared capacity)">3. Sybil (4 Wallets)</button>
+            <button class="m-scen-btn" id="btn-demo-refill" title="Fast-forward time +15 min (Refills +$25k)">4. Refill (+15m)</button>
+            <button class="m-scen-btn" id="btn-demo-repay" title="Repay is 100% ungated">5. Repay</button>
           </div>
         </div>
 

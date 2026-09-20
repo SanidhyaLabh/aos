@@ -33,6 +33,12 @@ const sources = {
   },
   'RiskEngine.sol': {
     content: fs.readFileSync(path.join(contractsDir, 'RiskEngine.sol'), 'utf8')
+  },
+  'FrictionEngine.sol': {
+    content: fs.readFileSync(path.join(contractsDir, 'FrictionEngine.sol'), 'utf8')
+  },
+  'EconomicExposureGuard.sol': {
+    content: fs.readFileSync(path.join(contractsDir, 'EconomicExposureGuard.sol'), 'utf8')
   }
 };
 

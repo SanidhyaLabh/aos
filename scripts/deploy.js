@@ -34,6 +34,8 @@ async function main() {
   const lendingArtifact = JSON.parse(fs.readFileSync(path.join(artifactsDir, "ToyLendingMarket.json"), "utf8"));
   const sentinelArtifact = JSON.parse(fs.readFileSync(path.join(artifactsDir, "SentinelRegistry.json"), "utf8"));
   const riskEngineArtifact = JSON.parse(fs.readFileSync(path.join(artifactsDir, "RiskEngine.json"), "utf8"));
+  const frictionArtifact = JSON.parse(fs.readFileSync(path.join(artifactsDir, "FrictionEngine.json"), "utf8"));
+  const guardArtifact = JSON.parse(fs.readFileSync(path.join(artifactsDir, "EconomicExposureGuard.json"), "utf8"));
 
   const initialPrice = ethers.parseEther("100"); // $100.00 base price
 
@@ -92,12 +94,36 @@ async function main() {
   const sentinelAddress = await sentinel.getAddress();
   console.log(`[Deploy] SentinelRegistry deployed to: ${sentinelAddress}`);
 
-  // 7. Wire v2 linkages
+  // 7. Wire v2 linkages & Deploy FrictionEngine (DHFE)
   console.log("\n[Deploy] Wiring v2 Risk Engine & Sentinel linkages...");
   await (await sentinel.setRiskEngine(riskEngineAddress)).wait();
   await (await lendingASO.setSentinel(sentinelAddress)).wait();
   await (await lendingASO.setRiskEngine(riskEngineAddress)).wait();
-  console.log("[Deploy] Linkages established: Sentinel <-> RiskEngine, LendingMarket <-> Sentinel");
+
+  console.log("\n[Deploy] Deploying FrictionEngine (Dual-Horizon Friction Engine — DHFE)...");
+  const FrictionFactory = new ethers.ContractFactory(frictionArtifact.abi, frictionArtifact.bytecode, deployer);
+  const frictionEngine = await FrictionFactory.deploy();
+  await frictionEngine.waitForDeployment();
+  const frictionEngineAddress = await frictionEngine.getAddress();
+  console.log(`[Deploy] FrictionEngine deployed to: ${frictionEngineAddress}`);
+
+  await (await lendingASO.setFrictionEngine(frictionEngineAddress)).wait();
+  await (await frictionEngine.setLendingMarket(lendingAsoAddress)).wait();
+  await (await frictionEngine.setRiskEngine(riskEngineAddress)).wait();
+
+  // 8. Deploy EconomicExposureGuard (ORIGIN — EEG)
+  console.log("\n[Deploy] Deploying EconomicExposureGuard (ORIGIN — EEG: Max $100k, Refill $25k/15min)...");
+  const maxCapacity = ethers.parseEther("100000"); // $100,000 max capacity
+  const refillRate = ethers.parseEther("27.777777777777777777"); // ~$25k per 15 min
+  const GuardFactory = new ethers.ContractFactory(guardArtifact.abi, guardArtifact.bytecode, deployer);
+  const guard = await GuardFactory.deploy(maxCapacity, refillRate);
+  await guard.waitForDeployment();
+  const guardAddress = await guard.getAddress();
+  console.log(`[Deploy] EconomicExposureGuard deployed to: ${guardAddress}`);
+
+  await (await lendingASO.setExposureGuard(guardAddress)).wait();
+  await (await guard.setMarket(lendingAsoAddress)).wait();
+  console.log("[Deploy] Linkages established: Sentinel <-> RiskEngine, LendingMarket <-> FrictionEngine <-> EconomicExposureGuard");
 
   // 8. Seed borrower positions with 1,000 collateral units (nominal $100k)
   console.log("\n[Deploy] Seeding 1,000 collateral units for borrower in both lending pools...");
@@ -143,6 +169,14 @@ async function main() {
       SentinelRegistry: {
         address: sentinelAddress,
         abi: sentinelArtifact.abi
+      },
+      FrictionEngine: {
+        address: frictionEngineAddress,
+        abi: frictionArtifact.abi
+      },
+      EconomicExposureGuard: {
+        address: guardAddress,
+        abi: guardArtifact.abi
       }
     },
     accounts: {
