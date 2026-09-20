@@ -2,7 +2,6 @@
 
 > **On-chain Economic Exposure Guard that limits how quickly a lending market can create new debt, ensuring that even a manipulated oracle cannot be converted into an unlimited instantaneous liquidity drain.**
 
-Repository: `https://github.com/AnantSharmaDev768/aso-sentinel` (Multipli Hackathon 2026)  
 Active Branch: `feat/economic-exposure-guard`
 
 ---
