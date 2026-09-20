@@ -7,7 +7,7 @@
   },
   "contracts": {
     "ASOAdapter": {
-      "address": "0xa5543465883092C825D12698473838B50d84639f",
+      "address": "0x2a11D78619B896f5c637f7c5563c12B2FAfBed6A",
       "abi": [
         {
           "inputs": [
@@ -782,7 +782,7 @@
       ]
     },
     "VanillaOSM": {
-      "address": "0x71c77C6C7ea8e85FB92118C486CF95d13a79aDD2",
+      "address": "0x80C6e16eb08290824cb2850e549A7319c5b590C6",
       "abi": [
         {
           "inputs": [
@@ -1020,7 +1020,7 @@
       ]
     },
     "RiskEngine": {
-      "address": "0x967e43B864Af2C5dc4Fb7da863E5bAd827Fb45B2",
+      "address": "0x5b9372Bffc1aAE14cDE8F921F0FD53DFB0A0F825",
       "abi": [
         {
           "inputs": [],
@@ -1718,7 +1718,7 @@
       ]
     },
     "ToyLendingMarketOSM": {
-      "address": "0x17Da9ebEcdEC74607c4dDD582c6db91A2b56b1d5",
+      "address": "0x023E63D0015697eA6EBf0f064f09E508527D1928",
       "abi": [
         {
           "inputs": [
@@ -2414,7 +2414,7 @@
       ]
     },
     "ToyLendingMarketASO": {
-      "address": "0x10c0f34aec31ee9C20519E710851620A904beDA5",
+      "address": "0x4105E358e01060DD37c222Dea5b2B6892B0623a1",
       "abi": [
         {
           "inputs": [
@@ -3110,7 +3110,7 @@
       ]
     },
     "SentinelRegistry": {
-      "address": "0xf24078B040406e5FC3DC3E21f0CdF475e5A42c49",
+      "address": "0xb466dc29C6fB407b13c190C1B5cD137684921BDA",
       "abi": [
         {
           "inputs": [
@@ -3603,7 +3603,7 @@
       ]
     },
     "FrictionEngine": {
-      "address": "0x03470746a2599718fA55aca1bD1D41d161cf4E84",
+      "address": "0x2b761D3d44b48Be4Fec0C4aF895EB549f9e255A3",
       "abi": [
         {
           "inputs": [],
@@ -4107,7 +4107,7 @@
       ]
     },
     "EconomicExposureGuard": {
-      "address": "0x2d929838d32Ea33a0994D37F82965C2d284E3b4F",
+      "address": "0x56d4d6aEe0278c5Df2FA23Ecb32eC146C9446FDf",
       "abi": [
         {
           "inputs": [
@@ -4434,5 +4434,5 @@
     "feeder": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
     "borrower": "0x90F79bf6EB2c4f870365E785982E1f101E93b906"
   },
-  "deployedAt": "2026-09-20T07:13:58.321Z"
+  "deployedAt": "2026-09-20T08:10:33.954Z"
 }

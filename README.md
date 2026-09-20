@@ -91,6 +91,52 @@ On the Terminal UI (`http://localhost:5173/terminal`), use the **`2-MIN DEMO`** 
 
 ---
 
+## ⚖️ Resolving the Fundamental Trade-Off: Seamless UX vs. Exploit Prevention
+
+A core debate in DeFi protocol design is the friction trade-off:
+> *"Does protecting against catastrophic exploits require sacrificing composability, liquidity velocity, and user convenience?"*
+
+Traditional mitigations force painful compromises:
+- **Emergency Circuit Breakers & Pauses**: Freeze the entire protocol, locking legitimate users out of their funds and disabling liquidations when market volatility is highest.
+- **Withdrawal / Borrow Timelocks & Queues**: Force honest users to wait hours or days for routine actions, destroying instant composability and arbitrage.
+- **Heavyweight Governance Multisigs**: Introduce centralized human latency and censorship risks into permissionless protocols.
+
+**ORIGIN EEG breaks this false dichotomy** through five foundational design principles:
+
+### 1. Exploiting Time-Scale Asymmetry (The Core Insight)
+Flash-loan oracle manipulation attacks and normal borrowing have opposite temporal requirements:
+- **The Attacker:** Requires **instantaneous execution within 1 block** (or few seconds). If the attacker cannot extract millions immediately, arbitrageurs, liquidation bots, or fresh oracle price updates close the pricing discrepancy, destroying the profitability of the attack.
+- **Honest Borrowers:** Operate over **hours, days, and weeks**. Real credit demand is distributed continuously across time and users.
+
+By bounding instantaneous debt origination ($\text{Burst Cap} = \$100,000$) while allowing continuous linear refill ($\$25,000 / 15\text{ min}$), ORIGIN renders multi-million-dollar economic attacks economically irrational, without capping total long-term borrowing volume.
+
+### 2. Decoupling Burst Ceiling from Total Market Throughput
+Rate limiting does **not** mean low borrowing throughput:
+$$\text{Daily Debt Origination Throughput} = \$100,000 + \left(\frac{\$25,000}{900\text{ s}} \times 86,400\text{ s}\right) = \mathbf{\$2,500,000 \text{ per day}}$$
+- Honest volume of **$2.5M/day** flows freely without governance intervention or delays.
+- Maximum instantaneous single-block loss under a 100% compromised oracle is strictly bounded to **$\le \$100,000$**.
+
+### 3. Invisible, Frictionless UX for Everyday Borrowers
+For $99.9\%$ of legitimate borrowers (e.g., retail loans of $\$1,000$ to $\$25,000$):
+- **1 Standard Transaction**: No multi-step approval, timelock, or multi-signature delays.
+- **Minimal Gas Overhead**: The token-bucket update executes in pure integer arithmetic on an updated timestamp and capacity variable (`~5,200` additional EVM gas, or `<3%` of standard borrow gas).
+- **Zero Keeper Dependency**: No off-chain bot or keeper needs to be paid or trusted to pump or maintain the rate limiter.
+
+### 4. Zero-Cost Reversion Protection (Pre-Flight Simulation)
+If an unusual surge or an attacker exhausts current capacity:
+- dApps and frontends query `eeg.getAvailableCapacity()` via gasless `eth_call`.
+- The user's interface displays the available credit allowance and precise seconds until the next refill.
+- Users are proactively warned *before* signing, preventing failed on-chain transactions and wasted gas fees.
+
+### 5. Asymmetric Friction: The Anti-Churn Invariant
+Friction in ORIGIN is strictly one-directional:
+- **Debt Creation (`borrow`)** is velocity-bounded by EEG.
+- **Debt Reduction (`repay`)** is **100% UNGATED and zero-friction** in every protocol state.
+- **De-leveraging and Liquidations** never hit the rate limiter, ensuring protocol solvency during market crashes.
+- **Anti-Churn Invariant**: Repayments *do not* refill the token bucket. This ensures an attacker cannot take out flash loans, repay them, and churn capacity to game the system.
+
+---
+
 ## 🔍 Prior Art Matrix
 
 | System | Mechanism | Global / Per-User | Time-Based | Borrow Specific | Oracle Dependent | Aggregate | Similarity to EEG |
