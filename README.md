@@ -137,6 +137,72 @@ Friction in ORIGIN is strictly one-directional:
 
 ---
 
+## 📐 Quantitative Manipulation-Cost Estimation Theorem (Risk & Liquidation Layer)
+
+In addition to token-bucket rate limiting, the underlying **Risk Engine** evaluates whether an economic exploit is mathematically profitable under current market liquidity.
+
+### 1. The Fundamental Economic Security Theorem
+An oracle manipulation attack on a collateralized lending market is economically irrational if and only if the **net cost to manipulate the oracle ($C_{\text{net}}(m)$)** strictly exceeds the **maximum extractable unbacked debt ($E_{\text{borrow}}(m)$)**:
+
+$$\Pi_{\text{attack}}(m) = E_{\text{borrow}}(m) - C_{\text{net}}(m) < 0 \quad \forall m > 0$$
+
+Where:
+- $m$: Proportional price manipulation/pump ($m = \frac{\Delta P}{P_0}$).
+- $C_{\text{net}}(m)$: Irreversible capital lost by the attacker to push the oracle price by $+m\%$.
+- $E_{\text{borrow}}(m)$: Maximum unbacked debt stolen above the true liquidation value of the posted collateral.
+
+---
+
+### 2. Multi-Source Liquidity & Coalition Cost Derivation
+
+#### Step 1: Capital to Push an Individual Source ($C_{\text{cap}, s}$)
+For any tradable market venue $s$ with quote depth $R_s$ under a constant-product or orderbook market model:
+$$C_{\text{cap}, s}(m) = R_s \cdot (\sqrt{1 + m} - 1)$$
+*(For linear orderbook depth approximations: $C_{\text{cap}, s}(m) = D_s \cdot m$, where $D_s$ is the capital required to move the price $1\%$.)*  
+For untradable reference rates (e.g., Fed H.15, regulatory indices): $C_{\text{cap}, s}(m) = \infty$.
+
+#### Step 2: Coalition Cost to Move the Weighted Median ($C_{\text{cap, med}}$)
+Let reporting sources have normalized weights:
+$$w'_s = \frac{w_s}{\sum_{j \in \text{Reporting}} w_j}$$
+To shift the median price by $+m\%$, the attacker must manipulate a subset of sources $S$ whose cumulative weight crosses the $50\%$ consensus threshold. The minimum capital required across all feasible corruptible coalitions is:
+$$C_{\text{cap, med}}(m) = \min_{S \subseteq \text{Sources}} \left\{ \sum_{s \in S} C_{\text{cap}, s}(m) \quad \text{s.t.} \quad \sum_{s \in S} w'_s \ge 0.5 \right\}$$
+*(Sources sharing the same upstream aggregator or feed are grouped together to prevent correlated sybil manipulation.)*
+
+#### Step 3: Net Capital Loss After Position Unwind ($C_{\text{net}}$)
+An attacker cannot recover 100% of their capital after pumping an illiquid market. Unwinding the position incurs severe slippage, MEV arbitrage losses, and trading fees:
+$$C_{\text{net}}(m) = \rho \cdot C_{\text{cap, med}}(m)$$
+Where $\rho$ is the empirically calibrated net-loss ratio ($\rho \approx 0.15$ to $0.50$ depending on pool depth and arbitrage velocity).
+
+---
+
+### 3. Extractable Unbacked Debt ($E_{\text{borrow}}$)
+When the oracle price is inflated by $+m\%$, the attacker posts collateral with true value $V$ and borrows against the inflated valuation $V \cdot (1 + m)$:
+$$E_{\text{borrow}}(m) = \text{LTV} \cdot V \cdot m$$
+Or expressed as a function of the available market debt headroom $H$ and liquidation threshold $\text{mat}$:
+$$E_{\text{borrow}}(m) = H \cdot \max\left(0, 1 - \frac{\text{mat}}{1 + m}\right)$$
+
+---
+
+### 4. Dynamic Cost-Anchored Debt Ceiling ($\Gamma$)
+To guarantee bounded protocol risk across all possible manipulation magnitudes $m \le m_{\text{ref}}$, the Risk Engine enforces a dynamic debt ceiling:
+$$\Gamma = k \cdot \frac{C_{\text{net}}(m_{\text{ref}})}{m_{\text{ref}}}$$
+Where:
+- $m_{\text{ref}}$: The maximum reference price surge defended (e.g., $15\%$).
+- $k$: Governance safety factor ($k \le 0.10$, chosen strictly below the 5th-percentile loss ratio).
+
+The effective borrowing ceiling and epoch growth limit are then bounded dynamically:
+$$\text{DebtCeiling} = \min\left(\text{ConfiguredCeiling}, \; \Gamma\right)$$
+$$\text{EpochGrowthCap} = g \cdot \Gamma \quad (g \approx 20\%)$$
+
+---
+
+### 5. Closing Structural Vulnerabilities (Anti-Exploit Invariants)
+1. **Slow-Ratchet Defense:** Price inflation $m$ is measured not only against the last spot update, but against a 24-hour slow exponential moving anchor with an absolute drift cap per epoch ($100\text{ bps/epoch}$), eliminating multi-day creeping manipulation.
+2. **Fake-Depth Defense:** Rather than reading spot liquidity (which an attacker could temporarily spoof via flash loans or wash trading), $\Gamma$ is calculated using the **minimum depth** observed across the last $N$ epochs (12-cycle ring buffer in `RiskEngine.sol`).
+3. **Dual-Horizon Friction (DHFE):** For large borrowers attempting to consume remaining capacity near $\Gamma$, a convex friction multiplier $\phi(u) = u^{k_\phi}$ dynamically raises borrow interest rates, rendering rapid capital accumulation prohibitive.
+
+---
+
 ## 🔍 Prior Art Matrix
 
 | System | Mechanism | Global / Per-User | Time-Based | Borrow Specific | Oracle Dependent | Aggregate | Similarity to EEG |
