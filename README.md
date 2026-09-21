@@ -6,7 +6,7 @@ Active Branch: `feat/economic-exposure-guard`
 
 ---
 
-## 🎯 The Core Thesis
+## The Core Thesis
 
 Oracle manipulation attacks (e.g. Mango Markets, Inverse Finance, Platypus, Venus) become catastrophic when a false or manipulated collateral price can **instantly unlock 100% of the remaining borrowing liquidity** in a lending market within a single transaction.
 
@@ -18,7 +18,7 @@ $$\Delta \text{Debt}_{\text{new}} \le \text{Capacity}_0 + R_{\text{max}} \times 
 
 ---
 
-## 🛡️ Key Architectural Invariants
+## Key Architectural Invariants
 
 1. **Token-Bucket Debt Rate Limiter:**
    - `maxCapacity`: Configured burst borrowing allowance (e.g., $\$100,000$).
@@ -36,7 +36,7 @@ $$\Delta \text{Debt}_{\text{new}} \le \text{Capacity}_0 + R_{\text{max}} \times 
 
 ---
 
-## ⚡ Quick Start (Windows One-Click Launcher)
+## Quick Start (Windows One-Click Launcher)
 
 Double-click or run:
 ```bat
@@ -76,21 +76,8 @@ This automatically starts:
 
 ---
 
-## ⏱️ 2-Minute Judge Demo Sequence
 
-On the Terminal UI (`http://localhost:5173/terminal`), use the **`2-MIN DEMO`** interactive bar:
-
-| Step | Button | Action | Invariant Demonstrated |
-| :--- | :--- | :--- | :--- |
-| **0:00–0:20** | **`1. Normal ($2.9k)`** | Honest user borrows $\$2,900$. | **Seamless UX**: 1 standard transaction, no delays, no extra approvals. |
-| **0:20–0:45** | **`2. $10M Exploit`** | Oracle pumped $+1000\%$, attacker requests $\$10\text{M}$ drain. | **Hard Revert**: On-chain revert `ExceedsAvailableCapacity(10000000, 97100)`. Loss is bounded. |
-| **0:45–1:15** | **`3. Sybil (4 Wallets)`** | 4 distinct attacker wallets try concurrent borrows ($\$50\text{k}, \$13\text{k}, \$50\text{k}, \$100\text{k}$). | **Sybil Resistance**: Wallets 1 & 2 consume remaining capacity; Wallets 3 & 4 revert on-chain. |
-| **1:15–1:40** | **`4. Refill (+15m)`** | Fast-forward timestamp $+900\text{s}$ ($+15$ min). | **Continuous Refill**: Bucket replenishes linearly by $+\$25,000$. |
-| **1:40–2:00** | **`5. Repay`** | User repays $\$2,900$ debt. | **DeFi Invariant**: Repay is 100% ungated and does **not** refill capacity. |
-
----
-
-## ⚖️ Resolving the Fundamental Trade-Off: Seamless UX vs. Exploit Prevention
+##  Resolving the Fundamental Trade-Off: Seamless UX vs. Exploit Prevention
 
 A core debate in DeFi protocol design is the friction trade-off:
 > *"Does protecting against catastrophic exploits require sacrificing composability, liquidity velocity, and user convenience?"*
@@ -136,7 +123,7 @@ Friction in ORIGIN is strictly one-directional:
 
 ---
 
-## 📐 Quantitative Manipulation-Cost Estimation Theorem (Risk & Liquidation Layer)
+## Quantitative Manipulation-Cost Estimation Theorem (Risk & Liquidation Layer)
 
 In addition to token-bucket rate limiting, the underlying **Risk Engine** evaluates whether an economic exploit is mathematically profitable under current market liquidity.
 
@@ -224,7 +211,7 @@ $$\text{EpochGrowthCap} = g \cdot \Gamma \quad (g \approx 20\%)$$
 
 ---
 
-## 🔍 Prior Art Matrix
+## Prior Art Matrix
 
 | System | Mechanism | Global / Per-User | Time-Based | Borrow Specific | Oracle Dependent | Aggregate | Similarity to EEG |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -242,7 +229,7 @@ $$\text{EpochGrowthCap} = g \cdot \Gamma \quad (g \approx 20\%)$$
 
 ---
 
-## 🧪 Test Suite & Invariants
+## Test Suite & Invariants
 
 Foundry test contract: [`test/EconomicExposureGuard.t.sol`](file:///c:/Users/Sanidhya-PC/OneDrive/Desktop/Multipli/test/EconomicExposureGuard.t.sol)  
 On-Chain Anvil suite: [`test/test_eeg_onchain.js`](file:///c:/Users/Sanidhya-PC/OneDrive/Desktop/Multipli/test/test_eeg_onchain.js)
@@ -260,7 +247,7 @@ node test/test_eeg_onchain.js
 
 ---
 
-## ⚖️ Claims & Non-Claims
+## Claims & Non-Claims
 
 ### What We Defensibly Claim
 - **Bounded Debt Velocity:** Assuming all borrow paths route through EEG, aggregate newly originated debt cannot exceed $\text{Capacity}_0 + R_{\text{max}} \times \Delta t$.
