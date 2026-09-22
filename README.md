@@ -4,6 +4,8 @@
 
 Active Branch: `feat/economic-exposure-guard`
 
+![Diagram](diagram.png)
+
 ---
 
 ## The Core Thesis
