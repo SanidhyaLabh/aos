@@ -9,7 +9,7 @@ License: Apache 2.0 / MIT
 
 ---
 
-## 🗺️ Architectural Workflow Overview
+##  Architectural Workflow Overview
 
 ![ORIGIN System Workflow](assets/demo/diagram.png)
 
@@ -39,7 +39,7 @@ License: Apache 2.0 / MIT
 
 ---
 
-## 🎯 The Core Thesis
+## The Core Thesis
 
 Oracle manipulation attacks (e.g., Mango Markets, Inverse Finance, Platypus, Venus, Euler) become catastrophic when a manipulated or distorted collateral price can **instantly extract 100% of available market liquidity within a single block**.
 
@@ -51,7 +51,7 @@ $$\Delta \text{Debt}_{\text{new}} \le \text{Capacity}_0 + R_{\text{max}} \times 
 
 ---
 
-## 📐 Hierarchical Multi-Bucket Formal Formulation & Theorems
+## Hierarchical Multi-Bucket Formal Formulation & Theorems
 
 ORIGIN implements a **3-Tier Hierarchical Economic Exposure Guard** to prevent cross-market contagion, correlation cascading, and aggregate protocol liquidation drains.
 
@@ -193,7 +193,7 @@ When an attestation report $\mathcal{P} = (\text{assetId}, P, t_{\text{rep}}, \t
 
 ---
 
-## 🚪 BorrowGateway Atomic Pipeline & Bypass Protection
+## BorrowGateway Atomic Pipeline & Bypass Protection
 
 A critical vulnerability in multi-contract security layers is the **direct bypass attack**, where an adversary interacts directly with the underlying lending pool (`ToyLendingMarket.sol`) to avoid the rate limits.
 
@@ -226,38 +226,7 @@ Any direct call to `borrow()` or `originateDebt()` originating from an EOA, flas
 
 ---
 
-## ⚡ Quick Start (Windows One-Click Launcher)
-
-Double-click or execute from PowerShell / Command Prompt:
-```bat
-run.bat
-```
-
-This automatically orchestrates the complete production environment:
-1. **Local Anvil EVM Node** on `http://127.0.0.1:8545` (Chain ID `31337`)
-2. **Contract Compilation & Deployment** via `scripts/compile.js` and `scripts/deploy.js`
-3. **Live Mock Price Feeds Server** on `http://127.0.0.1:3001`
-4. **EIP-712 Live Attestation Service** on `http://127.0.0.1:3002`
-5. **Python Risk Engine Backend** on `http://127.0.0.1:5001`
-6. **Frontend Interactive Terminal** on `http://localhost:5173/terminal`
-
----
-
-## ⏱️ 2-Minute Judge Demo Sequence
-
-On the Terminal UI (`http://localhost:5173/terminal`), use the **`2-MIN DEMO`** interactive control bar:
-
-| Step | Button | Action | Invariant Demonstrated |
-| :--- | :--- | :--- | :--- |
-| **0:00–0:20** | **`1. Normal ($2.9k)`** | Honest user borrows $\$2,900$. | **Seamless UX**: 1 standard transaction, no delays, no extra approvals. |
-| **0:20–0:45** | **`2. $10M Exploit`** | Oracle pumped $+1000\%$, attacker requests $\$10\text{M}$ drain. | **Hard Revert**: On-chain revert `ExceedsAvailableCapacity(10000000, 97100)`. Loss is bounded. |
-| **0:45–1:15** | **`3. Sybil (4 Wallets)`** | 4 distinct attacker wallets try concurrent borrows ($\$50\text{k}, \$13\text{k}, \$50\text{k}, \$100\text{k}$). | **Sybil Resistance**: Wallets 1 & 2 consume remaining capacity; Wallets 3 & 4 revert on-chain. |
-| **1:15–1:40** | **`4. Refill (+15m)`** | Fast-forward timestamp $+900\text{s}$ ($+15$ min). | **Continuous Refill**: Bucket replenishes linearly by $+\$25,000$. |
-| **1:40–2:00** | **`5. Repay`** | User repays $\$2,900$ debt. | **DeFi Invariant**: Repay is 100% ungated and does **not** refill capacity. |
-
----
-
-## ⚖️ Resolving the Fundamental Trade-Off: Seamless UX vs. Exploit Prevention
+## Resolving the Fundamental Trade-Off: Seamless UX vs. Exploit Prevention
 
 A foundational debate in DeFi protocol design is the friction trade-off:
 > *"Does protecting against catastrophic exploits require sacrificing composability, liquidity velocity, and user convenience?"*
@@ -388,7 +357,7 @@ $$\text{EpochGrowthCap} = g \cdot \Gamma \quad (g \approx 20\%)$$
 
 ---
 
-## 🔍 Prior Art Matrix
+##  Prior Art Matrix
 
 | System | Mechanism | Global / Per-User | Time-Based | Borrow Specific | Oracle Dependent | Aggregate | Structural Difference vs. ORIGIN |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -401,7 +370,7 @@ $$\text{EpochGrowthCap} = g \cdot \Gamma \quad (g \approx 20\%)$$
 
 ---
 
-## 🧪 Deterministic Test Suite & Invariants
+##  Deterministic Test Suite & Invariants
 
 The test suite validates all 15 formal invariants across three dedicated verification suites:
 
@@ -442,7 +411,7 @@ npm test
 
 ---
 
-## ⚖️ Claims & Non-Claims
+## Claims & Non-Claims
 
 ### What We Defensibly Claim
 - **Bounded Debt Velocity:** Under complete oracle corruption, newly minted unbacked debt across any market, group, or protocol level cannot exceed $\Delta D(t) \le C_0 + R \cdot \Delta t$.
@@ -458,7 +427,3 @@ npm test
 
 ---
 
-## 👥 Authors & Acknowledgments
-
-- **Sanidhya Labh** — System Architecture, Smart Contracts, Quantitative Risk Engine  
-- Built for the **Multipli Hackathon 2026**
