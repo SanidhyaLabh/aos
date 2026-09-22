@@ -3,10 +3,6 @@
 
 > **Publication-Grade DeFi Security Layer: Mathematical Velocity Bounding, Multi-Tier Token Buckets, EIP-712 Quorum Attestations, and Real-Time Economic Insolvency Protection.**
 
-Repository: `https://github.com/SanidhyaLabh/aso` (Multipli Hackathon 2026)  
-Active Branch: `feat/economic-exposure-guard`  
-License: Apache 2.0 / MIT
-
 ---
 
 ##  Architectural Workflow Overview
