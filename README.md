@@ -153,12 +153,25 @@ struct PriceReport {
 ```
 The EIP-712 Domain Separator and Struct TypeHash are defined as:
 
-$$\text{EIP712\_DOMAIN\_TYPEHASH} = \text{keccak256}\left(\texttt{"EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"}\right)$$
+```solidity
+EIP712_DOMAIN_TYPEHASH = keccak256(
+    "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
+);
 
-$$\text{DOMAIN\_SEPARATOR} = \text{keccak256}\left(\text{abi.encode}\left(\text{EIP712\_DOMAIN\_TYPEHASH}, \text{keccak256}(name), \text{keccak256}(version), chainId, verifyingContract\right)\right)$$
+DOMAIN_SEPARATOR = keccak256(
+    abi.encode(
+        EIP712_DOMAIN_TYPEHASH,
+        keccak256(bytes(name)),
+        keccak256(bytes(version)),
+        chainId,
+        verifyingContract
+    )
+);
 
-$$\text{TYPEHASH} = \text{keccak256}\left(\texttt{"PriceReport(bytes32 assetId,uint256 price,uint256 timestamp,uint256 roundId,uint256 divergenceBps,uint8 sourceCount)"}\right)$$
-
+TYPEHASH = keccak256(
+    "PriceReport(bytes32 assetId,uint256 price,uint256 timestamp,uint256 roundId,uint256 divergenceBps,uint8 sourceCount)"
+);
+```
 ### 2. Cross-Source Dispersion & Divergence Bound
 
 Let $\mathcal{S} = \{P_1, P_2, \dots, P_N\}$ be the array of normalized spot prices collected from $N$ distinct external venues (e.g., Pyth, Binance, Coinbase, Uniswap V3).  
