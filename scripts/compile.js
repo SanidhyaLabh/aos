@@ -19,6 +19,9 @@ const sources = {
   'interfaces/IOracle.sol': {
     content: fs.readFileSync(path.join(contractsDir, 'interfaces', 'IOracle.sol'), 'utf8')
   },
+  'interfaces/IOriginOracle.sol': {
+    content: fs.readFileSync(path.join(contractsDir, 'interfaces', 'IOriginOracle.sol'), 'utf8')
+  },
   'VanillaOSM.sol': {
     content: fs.readFileSync(path.join(contractsDir, 'VanillaOSM.sol'), 'utf8')
   },
@@ -39,6 +42,15 @@ const sources = {
   },
   'EconomicExposureGuard.sol': {
     content: fs.readFileSync(path.join(contractsDir, 'EconomicExposureGuard.sol'), 'utf8')
+  },
+  'GlobalExposureGuard.sol': {
+    content: fs.readFileSync(path.join(contractsDir, 'GlobalExposureGuard.sol'), 'utf8')
+  },
+  'RiskGroupExposureGuard.sol': {
+    content: fs.readFileSync(path.join(contractsDir, 'RiskGroupExposureGuard.sol'), 'utf8')
+  },
+  'BorrowGateway.sol': {
+    content: fs.readFileSync(path.join(contractsDir, 'BorrowGateway.sol'), 'utf8')
   }
 };
 

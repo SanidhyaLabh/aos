@@ -1,0 +1,55 @@
+Directory structure:
+└── sanidhyalabh-aso/
+    ├── README.md
+    ├── ORIGIN_EEG_TEAM_RESEARCH.md
+    ├── package.json
+    ├── run.bat
+    ├── assets/
+    │   └── demo/
+    │       └── empty
+    ├── backend/
+    │   ├── calibrate_dhfe.py
+    │   ├── friction_engine.py
+    │   ├── manual_validator.py
+    │   ├── risk_engine.py
+    │   └── terminal_backend.py
+    ├── contracts/
+    │   ├── ASOAdapter.sol
+    │   ├── EconomicExposureGuard.sol
+    │   ├── FrictionEngine.sol
+    │   ├── RiskEngine.sol
+    │   ├── SentinelRegistry.sol
+    │   ├── ToyLendingMarket.sol
+    │   ├── VanillaOSM.sol
+    │   └── interfaces/
+    │       └── IOracle.sol
+    ├── data/
+    │   └── derived/
+    │       ├── ablation.csv
+    │       ├── incidents.csv
+    │       ├── rho_simulation.json
+    │       ├── sensitivity_sweep.csv
+    │       └── validation_results.json
+    ├── public/
+    │   └── data/
+    │       ├── ablation.csv
+    │       ├── incidents.csv
+    │       ├── sensitivity_sweep.csv
+    │       └── validation_results.json
+    ├── scripts/
+    │   ├── compile.js
+    │   ├── deploy.js
+    │   ├── runValidationHarness.js
+    │   └── simulateRho.js
+    ├── service/
+    │   ├── attestationService.js
+    │   ├── liveAttestationService.js
+    │   └── mockSourcesServer.js
+    └── test/
+        ├── crypto_test.js
+        ├── EconomicExposureGuard.t.sol
+        ├── FrictionEngine.t.sol
+        ├── run_tests.js
+        ├── test_eeg_onchain.js
+        ├── test_friction_engine.js
+        └── test_onchain_sig.js

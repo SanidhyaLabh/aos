@@ -7,7 +7,7 @@
   },
   "contracts": {
     "ASOAdapter": {
-      "address": "0x2a11D78619B896f5c637f7c5563c12B2FAfBed6A",
+      "address": "0x2B0d36FACD61B71CC05ab8F3D2355ec3631C0dd5",
       "abi": [
         {
           "inputs": [
@@ -19,6 +19,230 @@
           ],
           "stateMutability": "nonpayable",
           "type": "constructor"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "validUntil",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "blockTime",
+              "type": "uint256"
+            }
+          ],
+          "name": "AttestationExpired",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "elapsed",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxStaleness",
+              "type": "uint256"
+            }
+          ],
+          "name": "AttestationStale",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "sourceId",
+              "type": "bytes32"
+            }
+          ],
+          "name": "DuplicateSource",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "divergenceBps",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxAllowed",
+              "type": "uint256"
+            }
+          ],
+          "name": "ExcessiveDivergence",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "caller",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "bond",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "minRequired",
+              "type": "uint256"
+            }
+          ],
+          "name": "InsufficientBond",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "groups",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "minRequired",
+              "type": "uint256"
+            }
+          ],
+          "name": "InsufficientIndependentGroups",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "count",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "minRequired",
+              "type": "uint256"
+            }
+          ],
+          "name": "InsufficientSourceQuorum",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "price",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "minPrice",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxPrice",
+              "type": "uint256"
+            }
+          ],
+          "name": "InvalidAggregatePrice",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "reason",
+              "type": "string"
+            }
+          ],
+          "name": "InvalidParameter",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "start",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "end",
+              "type": "uint256"
+            }
+          ],
+          "name": "InvalidSamplingWindow",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "recovered",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "expected",
+              "type": "address"
+            }
+          ],
+          "name": "InvalidSignature",
+          "type": "error"
+        },
+        {
+          "inputs": [],
+          "name": "OraclePaused",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "roundId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "latestRoundId",
+              "type": "uint256"
+            }
+          ],
+          "name": "StaleRoundOrNonce",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "caller",
+              "type": "address"
+            }
+          ],
+          "name": "UnauthorizedAttester",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "windowEnd",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "blockTime",
+              "type": "uint256"
+            }
+          ],
+          "name": "WindowInFuture",
+          "type": "error"
         },
         {
           "anonymous": false,
@@ -149,6 +373,12 @@
               "type": "uint256"
             },
             {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "assetId",
+              "type": "bytes32"
+            },
+            {
               "indexed": false,
               "internalType": "uint256",
               "name": "price",
@@ -171,6 +401,12 @@
               "internalType": "uint256",
               "name": "divergenceBps",
               "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "roundId",
+              "type": "uint256"
             }
           ],
           "name": "PriceAccepted",
@@ -186,16 +422,10 @@
               "type": "address"
             },
             {
-              "indexed": false,
-              "internalType": "uint256",
-              "name": "price",
-              "type": "uint256"
-            },
-            {
-              "indexed": false,
-              "internalType": "uint256",
-              "name": "divergenceBps",
-              "type": "uint256"
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "assetId",
+              "type": "bytes32"
             },
             {
               "indexed": false,
@@ -206,6 +436,45 @@
           ],
           "name": "PriceRejected",
           "type": "event"
+        },
+        {
+          "inputs": [],
+          "name": "ATTESTATION_TYPEHASH",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "DOMAIN_SEPARATOR",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "EIP712_DOMAIN_TYPEHASH",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
         },
         {
           "inputs": [],
@@ -235,6 +504,19 @@
         },
         {
           "inputs": [],
+          "name": "MIN_INDEPENDENT_GROUPS",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "MIN_SOURCES",
           "outputs": [
             {
@@ -248,7 +530,58 @@
         },
         {
           "inputs": [],
+          "name": "OBSERVATION_TYPEHASH",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "SLASH_THRESHOLD_BPS",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ],
+          "name": "assetLastAttested",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ],
+          "name": "assetPrices",
           "outputs": [
             {
               "internalType": "uint256",
@@ -301,6 +634,11 @@
               "internalType": "uint256",
               "name": "divergenceBps",
               "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "roundId",
+              "type": "uint256"
             }
           ],
           "stateMutability": "view",
@@ -320,72 +658,6 @@
               "internalType": "uint256",
               "name": "",
               "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "components": [
-                {
-                  "internalType": "uint256",
-                  "name": "price",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "minPrice",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "maxPrice",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "address[]",
-                  "name": "sources",
-                  "type": "address[]"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "windowStart",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "windowEnd",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "bytes",
-                  "name": "signature",
-                  "type": "bytes"
-                }
-              ],
-              "internalType": "struct ASOAdapter.Attestation",
-              "name": "a",
-              "type": "tuple"
-            }
-          ],
-          "name": "computeStructHash",
-          "outputs": [
-            {
-              "internalType": "bytes32",
-              "name": "structHash",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "ethSignedHash",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "address",
-              "name": "recovered",
-              "type": "address"
             }
           ],
           "stateMutability": "view",
@@ -412,8 +684,14 @@
           "type": "function"
         },
         {
-          "inputs": [],
-          "name": "getLatestAttestation",
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "assetId",
+              "type": "bytes32"
+            }
+          ],
+          "name": "getPrice",
           "outputs": [
             {
               "internalType": "uint256",
@@ -422,60 +700,16 @@
             },
             {
               "internalType": "uint256",
-              "name": "minPrice",
+              "name": "updatedAt",
               "type": "uint256"
             },
             {
-              "internalType": "uint256",
-              "name": "maxPrice",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address[]",
-              "name": "sources",
-              "type": "address[]"
-            },
-            {
-              "internalType": "uint256",
-              "name": "windowStart",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "windowEnd",
-              "type": "uint256"
-            },
-            {
-              "internalType": "bytes",
-              "name": "signature",
-              "type": "bytes"
+              "internalType": "enum IOriginOracle.OracleStatus",
+              "name": "status",
+              "type": "uint8"
             }
           ],
           "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address[]",
-              "name": "sources",
-              "type": "address[]"
-            }
-          ],
-          "name": "getSourcesHash",
-          "outputs": [
-            {
-              "internalType": "bytes32",
-              "name": "packedHash",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "encodeHash",
-              "type": "bytes32"
-            }
-          ],
-          "stateMutability": "pure",
           "type": "function"
         },
         {
@@ -489,6 +723,89 @@
             }
           ],
           "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "bytes32",
+                  "name": "assetId",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "aggregatePrice",
+                  "type": "uint256"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "bytes32",
+                      "name": "sourceId",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "sourceGroup",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "price",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "timestamp",
+                      "type": "uint256"
+                    }
+                  ],
+                  "internalType": "struct ASOAdapter.Observation[]",
+                  "name": "observations",
+                  "type": "tuple[]"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "windowStart",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "windowEnd",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "roundId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "validUntil",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "signature",
+                  "type": "bytes"
+                }
+              ],
+              "internalType": "struct ASOAdapter.Attestation",
+              "name": "a",
+              "type": "tuple"
+            }
+          ],
+          "name": "hashAttestation",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "pure",
           "type": "function"
         },
         {
@@ -556,6 +873,25 @@
           "type": "function"
         },
         {
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ],
+          "name": "latestRound",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
           "inputs": [],
           "name": "maxStaleness",
           "outputs": [
@@ -596,6 +932,11 @@
         },
         {
           "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "assetId",
+              "type": "bytes32"
+            },
             {
               "internalType": "uint256",
               "name": "_price",
@@ -737,12 +1078,89 @@
                   "type": "bytes"
                 }
               ],
-              "internalType": "struct ASOAdapter.Attestation",
+              "internalType": "struct ASOAdapter.LegacyAttestation",
               "name": "a",
               "type": "tuple"
             }
           ],
           "name": "submit",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "bytes32",
+                  "name": "assetId",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "aggregatePrice",
+                  "type": "uint256"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "bytes32",
+                      "name": "sourceId",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "bytes32",
+                      "name": "sourceGroup",
+                      "type": "bytes32"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "price",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "timestamp",
+                      "type": "uint256"
+                    }
+                  ],
+                  "internalType": "struct ASOAdapter.Observation[]",
+                  "name": "observations",
+                  "type": "tuple[]"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "windowStart",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "windowEnd",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "roundId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "validUntil",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "signature",
+                  "type": "bytes"
+                }
+              ],
+              "internalType": "struct ASOAdapter.Attestation",
+              "name": "a",
+              "type": "tuple"
+            }
+          ],
+          "name": "submitAttestation",
           "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
@@ -782,7 +1200,7 @@
       ]
     },
     "VanillaOSM": {
-      "address": "0x80C6e16eb08290824cb2850e549A7319c5b590C6",
+      "address": "0xfbC22278A96299D91d41C453234d97b4F5Eb9B2d",
       "abi": [
         {
           "inputs": [
@@ -1020,7 +1438,7 @@
       ]
     },
     "RiskEngine": {
-      "address": "0x5b9372Bffc1aAE14cDE8F921F0FD53DFB0A0F825",
+      "address": "0x46b142DD1E924FAb83eCc3c08e4D46E82f005e0E",
       "abi": [
         {
           "inputs": [],
@@ -1718,7 +2136,7 @@
       ]
     },
     "ToyLendingMarketOSM": {
-      "address": "0x023E63D0015697eA6EBf0f064f09E508527D1928",
+      "address": "0xC9a43158891282A2B1475592D5719c001986Aaec",
       "abi": [
         {
           "inputs": [
@@ -1968,6 +2386,48 @@
             }
           ],
           "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "borrower",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "oraclePrice",
+              "type": "uint256"
+            }
+          ],
+          "name": "borrowFromGateway",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "borrowGateway",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
           "type": "function"
         },
         {
@@ -2247,6 +2707,19 @@
         },
         {
           "inputs": [],
+          "name": "requireGateway",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "riskEngine",
           "outputs": [
             {
@@ -2280,6 +2753,24 @@
             }
           ],
           "name": "setBaseRate",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_gateway",
+              "type": "address"
+            },
+            {
+              "internalType": "bool",
+              "name": "_requireGateway",
+              "type": "bool"
+            }
+          ],
+          "name": "setBorrowGateway",
           "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
@@ -2414,7 +2905,7 @@
       ]
     },
     "ToyLendingMarketASO": {
-      "address": "0x4105E358e01060DD37c222Dea5b2B6892B0623a1",
+      "address": "0x1c85638e118b37167e9298c2268758e058DdfDA0",
       "abi": [
         {
           "inputs": [
@@ -2664,6 +3155,48 @@
             }
           ],
           "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "borrower",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "oraclePrice",
+              "type": "uint256"
+            }
+          ],
+          "name": "borrowFromGateway",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "borrowGateway",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
           "type": "function"
         },
         {
@@ -2943,6 +3476,19 @@
         },
         {
           "inputs": [],
+          "name": "requireGateway",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "riskEngine",
           "outputs": [
             {
@@ -2976,6 +3522,24 @@
             }
           ],
           "name": "setBaseRate",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_gateway",
+              "type": "address"
+            },
+            {
+              "internalType": "bool",
+              "name": "_requireGateway",
+              "type": "bool"
+            }
+          ],
+          "name": "setBorrowGateway",
           "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
@@ -3110,7 +3674,7 @@
       ]
     },
     "SentinelRegistry": {
-      "address": "0xb466dc29C6fB407b13c190C1B5cD137684921BDA",
+      "address": "0x367761085BF3C12e5DA2Df99AC6E1a824612b8fb",
       "abi": [
         {
           "inputs": [
@@ -3603,7 +4167,7 @@
       ]
     },
     "FrictionEngine": {
-      "address": "0x2b761D3d44b48Be4Fec0C4aF895EB549f9e255A3",
+      "address": "0x4631BCAbD6dF18D94796344963cB60d44a4136b6",
       "abi": [
         {
           "inputs": [],
@@ -4107,7 +4671,7 @@
       ]
     },
     "EconomicExposureGuard": {
-      "address": "0x56d4d6aEe0278c5Df2FA23Ecb32eC146C9446FDf",
+      "address": "0xAA292E8611aDF267e563f334Ee42320aC96D0463",
       "abi": [
         {
           "inputs": [
@@ -4426,6 +4990,1356 @@
           "type": "function"
         }
       ]
+    },
+    "GlobalExposureGuard": {
+      "address": "0xe8D2A1E88c91DCd5433208d4152Cc4F399a7e91d",
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_maxCapacity",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_refillRatePerSecond",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "_emergencyGuardian",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "requested",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "available",
+              "type": "uint256"
+            }
+          ],
+          "name": "GlobalDebtRateLimitExceeded",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "reason",
+              "type": "string"
+            }
+          ],
+          "name": "InvalidParameter",
+          "type": "error"
+        },
+        {
+          "inputs": [],
+          "name": "Unauthorized",
+          "type": "error"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "caller",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "authorized",
+              "type": "bool"
+            }
+          ],
+          "name": "CallerAuthorizationUpdated",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "oldCapacity",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "newCapacity",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "reason",
+              "type": "string"
+            }
+          ],
+          "name": "EmergencyCapacityReduced",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "caller",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "remainingCapacity",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "totalIssued",
+              "type": "uint256"
+            }
+          ],
+          "name": "GlobalCapacityConsumed",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "newCapacity",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "elapsed",
+              "type": "uint256"
+            }
+          ],
+          "name": "GlobalCapacityReplenished",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousGov",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newGov",
+              "type": "address"
+            }
+          ],
+          "name": "GovernanceTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "maxCapacity",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "refillRatePerSecond",
+              "type": "uint256"
+            }
+          ],
+          "name": "ParametersUpdated",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "name": "authorizedCallers",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "consumeCapacity",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "remainingCapacity",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "currentCapacity",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "emergencyGuardian",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_newCapacity",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "reason",
+              "type": "string"
+            }
+          ],
+          "name": "emergencyReduceCapacity",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getAvailableCapacity",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "available",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "governance",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "lastUpdateTimestamp",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "maxCapacity",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "refillRatePerSecond",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_caller",
+              "type": "address"
+            },
+            {
+              "internalType": "bool",
+              "name": "_authorized",
+              "type": "bool"
+            }
+          ],
+          "name": "setAuthorizedCaller",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_guardian",
+              "type": "address"
+            }
+          ],
+          "name": "setEmergencyGuardian",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_newGov",
+              "type": "address"
+            }
+          ],
+          "name": "setGovernance",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_maxCapacity",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_refillRatePerSecond",
+              "type": "uint256"
+            }
+          ],
+          "name": "setParameters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "desiredAmount",
+              "type": "uint256"
+            }
+          ],
+          "name": "timeToRefill",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "secondsNeeded",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "totalIssued",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        }
+      ]
+    },
+    "RiskGroupExposureGuard": {
+      "address": "0x5067457698Fd6Fa1C6964e416b3f42713513B3dD",
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "_groupId",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "string",
+              "name": "_groupName",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_maxCapacity",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_refillRatePerSecond",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "_emergencyGuardian",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "groupId",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint256",
+              "name": "requested",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "available",
+              "type": "uint256"
+            }
+          ],
+          "name": "GroupDebtRateLimitExceeded",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "reason",
+              "type": "string"
+            }
+          ],
+          "name": "InvalidParameter",
+          "type": "error"
+        },
+        {
+          "inputs": [],
+          "name": "Unauthorized",
+          "type": "error"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "caller",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "authorized",
+              "type": "bool"
+            }
+          ],
+          "name": "CallerAuthorizationUpdated",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "oldCapacity",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "newCapacity",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "reason",
+              "type": "string"
+            }
+          ],
+          "name": "EmergencyCapacityReduced",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousGov",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newGov",
+              "type": "address"
+            }
+          ],
+          "name": "GovernanceTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "groupId",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "caller",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "remainingCapacity",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "totalIssued",
+              "type": "uint256"
+            }
+          ],
+          "name": "GroupCapacityConsumed",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "groupId",
+              "type": "bytes32"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "newCapacity",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "elapsed",
+              "type": "uint256"
+            }
+          ],
+          "name": "GroupCapacityReplenished",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "maxCapacity",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "refillRatePerSecond",
+              "type": "uint256"
+            }
+          ],
+          "name": "ParametersUpdated",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "name": "authorizedCallers",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "consumeCapacity",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "remainingCapacity",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "currentCapacity",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "emergencyGuardian",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_newCapacity",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "reason",
+              "type": "string"
+            }
+          ],
+          "name": "emergencyReduceCapacity",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getAvailableCapacity",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "available",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "governance",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "groupId",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "groupName",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "lastUpdateTimestamp",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "maxCapacity",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "refillRatePerSecond",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_caller",
+              "type": "address"
+            },
+            {
+              "internalType": "bool",
+              "name": "_authorized",
+              "type": "bool"
+            }
+          ],
+          "name": "setAuthorizedCaller",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_guardian",
+              "type": "address"
+            }
+          ],
+          "name": "setEmergencyGuardian",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_newGov",
+              "type": "address"
+            }
+          ],
+          "name": "setGovernance",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_maxCapacity",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_refillRatePerSecond",
+              "type": "uint256"
+            }
+          ],
+          "name": "setParameters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "desiredAmount",
+              "type": "uint256"
+            }
+          ],
+          "name": "timeToRefill",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "secondsNeeded",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "totalIssued",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        }
+      ]
+    },
+    "BorrowGateway": {
+      "address": "0x18E317A7D70d8fBf8e6E893616b52390EbBdb629",
+      "abi": [
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "reason",
+              "type": "string"
+            }
+          ],
+          "name": "InvalidParameter",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "market",
+              "type": "address"
+            }
+          ],
+          "name": "MarketNotConfigured",
+          "type": "error"
+        },
+        {
+          "inputs": [],
+          "name": "OraclePriceZero",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "assetId",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint8",
+              "name": "status",
+              "type": "uint8"
+            }
+          ],
+          "name": "OracleUnhealthy",
+          "type": "error"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint8",
+              "name": "state",
+              "type": "uint8"
+            }
+          ],
+          "name": "SentinelStateBlocked",
+          "type": "error"
+        },
+        {
+          "inputs": [],
+          "name": "Unauthorized",
+          "type": "error"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "borrower",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "market",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "oraclePrice",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "marketCapRemaining",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "groupCapRemaining",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "globalCapRemaining",
+              "type": "uint256"
+            }
+          ],
+          "name": "BorrowExecuted",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousGov",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newGov",
+              "type": "address"
+            }
+          ],
+          "name": "GovernanceTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "market",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "assetId",
+              "type": "bytes32"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "oracle",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "sentinel",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "marketGuard",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "riskGroupGuard",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "globalGuard",
+              "type": "address"
+            }
+          ],
+          "name": "MarketRegistered",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "market",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "active",
+              "type": "bool"
+            }
+          ],
+          "name": "MarketStatusUpdated",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "market",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "borrow",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "oraclePrice",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "market",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "canBorrow",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "allowed",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "marketAvail",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "groupAvail",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "globalAvail",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "revertReason",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "emergencyGuardian",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "governance",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "name": "marketConfigs",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "assetId",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "address",
+              "name": "oracle",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "sentinel",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "marketGuard",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "riskGroupGuard",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "globalGuard",
+              "type": "address"
+            },
+            {
+              "internalType": "bool",
+              "name": "active",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "market",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "assetId",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "address",
+              "name": "oracle",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "sentinel",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "marketGuard",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "riskGroupGuard",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "globalGuard",
+              "type": "address"
+            }
+          ],
+          "name": "registerMarket",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_guardian",
+              "type": "address"
+            }
+          ],
+          "name": "setEmergencyGuardian",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_newGov",
+              "type": "address"
+            }
+          ],
+          "name": "setGovernance",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "market",
+              "type": "address"
+            },
+            {
+              "internalType": "bool",
+              "name": "active",
+              "type": "bool"
+            }
+          ],
+          "name": "setMarketActive",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ]
     }
   },
   "accounts": {
@@ -4434,5 +6348,5 @@
     "feeder": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
     "borrower": "0x90F79bf6EB2c4f870365E785982E1f101E93b906"
   },
-  "deployedAt": "2026-09-20T08:10:33.954Z"
+  "deployedAt": "2026-09-22T16:21:23.992Z"
 }
