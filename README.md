@@ -11,7 +11,7 @@ License: Apache 2.0 / MIT
 
 ## 🗺️ Architectural Workflow Overview
 
-![ORIGIN System Workflow](origin_workflow.png)
+![ORIGIN System Workflow](assets/demo/diagram.png)
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
