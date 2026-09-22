@@ -6,7 +6,10 @@
   "type": "module",
   "scripts": {
     "compile": "node scripts/compile.js",
-    "test": "node test/run_tests.js",
+    "test": "node test/run_tests.js && node test/test_hierarchical_eeg.js && node test/test_eip712_attestation.js",
+    "test:legacy": "node test/run_tests.js",
+    "test:eeg": "node test/test_hierarchical_eeg.js",
+    "test:eip712": "node test/test_eip712_attestation.js",
     "anvil": "anvil --port 8545 --chain-id 31337",
     "deploy": "node scripts/deploy.js",
     "server:sources": "node service/mockSourcesServer.js",

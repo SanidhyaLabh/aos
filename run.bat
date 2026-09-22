@@ -51,14 +51,14 @@ if errorlevel 1 (
 
 echo [5/5] Checking and starting background services...
 
-:: Python Risk Engine and EEG Backend (port 5001)
+:: Python Production Risk Engine and EEG Backend (port 5001)
 netstat -ano | findstr :5001 | findstr LISTENING >nul 2>&1
 if errorlevel 1 (
-    echo   -^> Starting Python Backend on port 5001...
-    start "Origin // Python EEG Backend (Port 5001)" cmd /k "python backend/terminal_backend.py"
+    echo   -^> Starting Production FastAPI Backend on port 5001...
+    start "Origin // Production Backend (FastAPI :5001)" cmd /k "python -m uvicorn backend.api.app:app --host 0.0.0.0 --port 5001"
     timeout /t 2 /nobreak >nul
 ) else (
-    echo   -^> Python backend already active on port 5001.
+    echo   -^> Backend already active on port 5001.
 )
 
 :: Vite Frontend (port 5173)

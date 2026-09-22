@@ -123,9 +123,65 @@ async function main() {
 
   await (await lendingASO.setExposureGuard(guardAddress)).wait();
   await (await guard.setMarket(lendingAsoAddress)).wait();
-  console.log("[Deploy] Linkages established: Sentinel <-> RiskEngine, LendingMarket <-> FrictionEngine <-> EconomicExposureGuard");
 
-  // 8. Seed borrower positions with 1,000 collateral units (nominal $100k)
+  // 9. Deploy GlobalExposureGuard (Protocol-wide: $5M max, $500k/hr refill)
+  console.log("\n[Deploy] Deploying GlobalExposureGuard ($5,000,000 Global Capacity)...");
+  const globalArtifact = JSON.parse(fs.readFileSync(path.join(artifactsDir, "GlobalExposureGuard.json"), "utf8"));
+  const GlobalFactory = new ethers.ContractFactory(globalArtifact.abi, globalArtifact.bytecode, deployer);
+  const globalGuard = await GlobalFactory.deploy(
+    ethers.parseEther("5000000"),
+    ethers.parseEther("138.888888888888888888"),
+    ethers.ZeroAddress
+  );
+  await globalGuard.waitForDeployment();
+  const globalGuardAddress = await globalGuard.getAddress();
+  console.log(`[Deploy] GlobalExposureGuard deployed to: ${globalGuardAddress}`);
+
+  // 10. Deploy RiskGroupExposureGuard (RWA Group: $2M max, $200k/hr refill)
+  console.log("\n[Deploy] Deploying RiskGroupExposureGuard (RWA Group: $2,000,000 Capacity)...");
+  const groupArtifact = JSON.parse(fs.readFileSync(path.join(artifactsDir, "RiskGroupExposureGuard.json"), "utf8"));
+  const GroupFactory = new ethers.ContractFactory(groupArtifact.abi, groupArtifact.bytecode, deployer);
+  const rwaGroupId = ethers.keccak256(ethers.toUtf8Bytes("RWA_GROUP"));
+  const rwaGroupGuard = await GroupFactory.deploy(
+    rwaGroupId,
+    "RWA Risk Group Guard",
+    ethers.parseEther("2000000"),
+    ethers.parseEther("55.555555555555555555"),
+    ethers.ZeroAddress
+  );
+  await rwaGroupGuard.waitForDeployment();
+  const rwaGroupGuardAddress = await rwaGroupGuard.getAddress();
+  console.log(`[Deploy] RiskGroupExposureGuard (RWA) deployed to: ${rwaGroupGuardAddress}`);
+
+  // 11. Deploy BorrowGateway
+  console.log("\n[Deploy] Deploying BorrowGateway...");
+  const gatewayArtifact = JSON.parse(fs.readFileSync(path.join(artifactsDir, "BorrowGateway.json"), "utf8"));
+  const GatewayFactory = new ethers.ContractFactory(gatewayArtifact.abi, gatewayArtifact.bytecode, deployer);
+  const borrowGateway = await GatewayFactory.deploy();
+  await borrowGateway.waitForDeployment();
+  const borrowGatewayAddress = await borrowGateway.getAddress();
+  console.log(`[Deploy] BorrowGateway deployed to: ${borrowGatewayAddress}`);
+
+  // Authorizations & Gateway Registration
+  await (await globalGuard.setAuthorizedCaller(borrowGatewayAddress, true)).wait();
+  await (await rwaGroupGuard.setAuthorizedCaller(borrowGatewayAddress, true)).wait();
+  await (await guard.setMarket(borrowGatewayAddress)).wait();
+  await (await lendingASO.setBorrowGateway(borrowGatewayAddress, false)).wait();
+
+  const rwaAssetId = ethers.keccak256(ethers.toUtf8Bytes("RWAUSD"));
+  await (await borrowGateway.registerMarket(
+    lendingAsoAddress,
+    rwaAssetId,
+    asoAddress,
+    sentinelAddress,
+    guardAddress,
+    rwaGroupGuardAddress,
+    globalGuardAddress
+  )).wait();
+
+  console.log("[Deploy] Linkages established: Sentinel <-> RiskEngine, LendingMarket <-> FrictionEngine <-> EconomicExposureGuard <-> BorrowGateway <-> GlobalGuard");
+
+  // 12. Seed borrower positions with 1,000 collateral units (nominal $100k)
   console.log("\n[Deploy] Seeding 1,000 collateral units for borrower in both lending pools...");
   const borrowerCollateral = ethers.parseEther("1000"); // 1,000 RWA tokens
   const lendingOsmBorrower = lendingOSM.connect(borrower);
@@ -137,7 +193,7 @@ async function main() {
   await tx2.wait();
   console.log("[Deploy] Borrower collateral deposited (1,000 units each)!");
 
-  // 9. Save deployment configuration
+  // 13. Save deployment configuration
   const deploymentData = {
     network: {
       name: "Anvil Localhost",
@@ -177,6 +233,18 @@ async function main() {
       EconomicExposureGuard: {
         address: guardAddress,
         abi: guardArtifact.abi
+      },
+      GlobalExposureGuard: {
+        address: globalGuardAddress,
+        abi: globalArtifact.abi
+      },
+      RiskGroupExposureGuard: {
+        address: rwaGroupGuardAddress,
+        abi: groupArtifact.abi
+      },
+      BorrowGateway: {
+        address: borrowGatewayAddress,
+        abi: gatewayArtifact.abi
       }
     },
     accounts: {

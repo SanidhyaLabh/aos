@@ -40,6 +40,8 @@ contract ToyLendingMarket {
     address public sentinel;
     address public riskEngine;
     address public frictionEngine;
+    address public borrowGateway;
+    bool public requireGateway;
     address public exposureGuard;
     address public governance;
 
@@ -173,33 +175,56 @@ contract ToyLendingMarket {
         return maxBorrowGrowthPerEpoch;
     }
 
+    function setBorrowGateway(address _gateway, bool _requireGateway) external onlyGov {
+        borrowGateway = _gateway;
+        requireGateway = _requireGateway;
+    }
+
     /**
-     * @notice Borrows USD against posted RWA collateral with epoch loss budget & ceiling checks.
+     * @notice Direct borrow entrypoint. If requireGateway is enabled, reverts to force calls via BorrowGateway.
      * @param amount USD amount to borrow
      */
     function borrow(uint256 amount) external returns (uint256 oraclePrice) {
+        if (requireGateway) {
+            require(msg.sender == borrowGateway, "Lending: direct-borrow-disabled-use-gateway");
+        }
+        return _executeBorrow(msg.sender, amount, 0);
+    }
+
+    /**
+     * @notice Gateway-mediated borrow entrypoint called exclusively by authorized BorrowGateway.
+     */
+    function borrowFromGateway(address borrower, uint256 amount, uint256 oraclePrice) external returns (uint256) {
+        require(msg.sender == borrowGateway || msg.sender == governance, "Lending: unauthorized-gateway");
+        return _executeBorrow(borrower, amount, oraclePrice);
+    }
+
+    function _executeBorrow(address borrower, uint256 amount, uint256 injectedOraclePrice) internal returns (uint256 oraclePrice) {
         require(amount > 0, "Lending: zero-borrow");
-        Position storage pos = positions[msg.sender];
+        Position storage pos = positions[borrower];
         require(pos.collateralAmount > 0, "Lending: no-collateral");
 
         // Sentinel state check: PROTECTIVE state reverts
         if (sentinel != address(0)) {
             uint8 sState = ISentinel(sentinel).currentState();
-            // RiskState enum: 0=FRESH, 1=WATCH, 2=STALE, 3=DISPUTED, 4=PROTECTIVE, 5=RECOVERING
             require(sState != 4, "sentinel protective");
         }
 
-        // 1. Query oracle
-        bool valid;
-        (oraclePrice, valid) = oracle.read();
-        require(valid, "Lending: Oracle halted or stale - borrowing paused");
-        require(oraclePrice > 0, "Lending: invalid-oracle-price");
+        // 1. Query or use verified oracle price
+        if (injectedOraclePrice > 0) {
+            oraclePrice = injectedOraclePrice;
+        } else {
+            bool valid;
+            (oraclePrice, valid) = oracle.read();
+            require(valid, "Lending: Oracle halted or stale - borrowing paused");
+            require(oraclePrice > 0, "Lending: invalid-oracle-price");
+        }
 
         // 2. Epoch growth cap check
         uint256 epoch = currentEpoch();
         uint256 epochCap = effectiveEpochGrowthCap();
         require(
-            borrowedInEpoch[msg.sender][epoch] + amount <= epochCap,
+            borrowedInEpoch[borrower][epoch] + amount <= epochCap,
             "epoch growth cap"
         );
 
@@ -216,23 +241,24 @@ contract ToyLendingMarket {
         // 5. Dual-Horizon Friction Engine (DHFE) pricing & structuring-resistant exposure update
         if (frictionEngine != address(0)) {
             (uint256 fInst, uint256 fCum, uint256 fFinal) = IFrictionEngine(frictionEngine)
-                .computeFriction(msg.sender, amount);
+                .computeFriction(borrower, amount);
             uint256 adjustedRate = IFrictionEngine(frictionEngine).effectiveRate(baseRate, fFinal);
-            IFrictionEngine(frictionEngine).updateExposure(msg.sender, amount);
-            emit FrictionApplied(msg.sender, fInst, fCum, fFinal, adjustedRate);
+            IFrictionEngine(frictionEngine).updateExposure(borrower, amount);
+            emit FrictionApplied(borrower, fInst, fCum, fFinal, adjustedRate);
         }
 
         // 6. ORIGIN Economic Exposure Guard (EEG): Token-bucket aggregate new debt rate limit
-        if (exposureGuard != address(0)) {
+        // (If called via gateway, gateway already consumed capacity; if direct borrow, local guard consumes)
+        if (exposureGuard != address(0) && msg.sender != borrowGateway) {
             IEconomicExposureGuard(exposureGuard).consumeCapacity(amount);
         }
 
         // Update state
-        borrowedInEpoch[msg.sender][epoch] += amount;
+        borrowedInEpoch[borrower][epoch] += amount;
         pos.debtAmount += amount;
         totalDebt += amount;
 
-        emit Borrowed(msg.sender, amount, oraclePrice, epoch);
+        emit Borrowed(borrower, amount, oraclePrice, epoch);
         return oraclePrice;
     }
 

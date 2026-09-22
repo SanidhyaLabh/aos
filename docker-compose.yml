@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  # 1. Local Anvil EVM Node (Development / Staging)
+  anvil:
+    image: ghcr.io/foundry-rs/foundry:latest
+    container_name: origin_anvil
+    command: ["anvil", "--host", "0.0.0.0", "--port", "8545", "--chain-id", "31337"]
+    ports:
+      - "8545:8545"
+    restart: unless-stopped
+
+  # 2. PostgreSQL Durable Audit Store
+  postgres:
+    image: postgres:16-alpine
+    container_name: origin_postgres
+    environment:
+      POSTGRES_DB: origin_db
+      POSTGRES_USER: origin_user
+      POSTGRES_PASSWORD: origin_secure_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # 3. Redis Operational Cache & WebSocket Bus
+  redis:
+    image: redis:7-alpine
+    container_name: origin_redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  # 4. ORIGIN Continuous Backend Daemon (FastAPI + Workers)
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: origin_backend
+    environment:
+      - ENV=production
+      - API_PORT=5001
+      - RPC_URLS=http://anvil:8545
+      - DATABASE_URL=postgresql://origin_user:origin_secure_password@postgres:5432/origin_db
+      - REDIS_URL=redis://redis:6379/0
+      - CHAIN_ID=31337
+    ports:
+      - "5001:5001"
+    depends_on:
+      - anvil
+      - postgres
+      - redis
+    restart: unless-stopped
+
+volumes:
+  pgdata:
