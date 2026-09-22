@@ -188,7 +188,7 @@ $$\text{DivergenceBps} = \left( \frac{\max_{i \in \mathcal{S}} P_i - \min_{i \in
 When an attestation report $\mathcal{P} = (\text{assetId}, P, t_{\text{rep}}, \text{roundId}, \text{div}, N)$ with signature $(v, r, s)$ is submitted to `ASOAdapter.sol`, it must satisfy four deterministic invariants:
 
 1. **Cryptographic Authenticity:**
-$$\text{ecrecover}\left(\text{keccak256}\left(\texttt{"\textbackslash x19\textbackslash x01"} \parallel \text{DOMAIN\_SEPARATOR} \parallel \text{hashStruct}\right)\right)$$
+`ecrecover(keccak256("\x19\x01" || DOMAIN_SEPARATOR || hashStruct))`
 
 3. **Quorum Sufficiency:**
    $$N \ge N_{\min} = 3 \quad \text{and} \quad \text{DistinctProviderGroups}(N) \ge 2$$
