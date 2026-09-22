@@ -4,7 +4,7 @@
 
 Active Branch: `feat/economic-exposure-guard`
 
-![Diagram](diagram.png)
+![Diagram](assets/diagram.png)
 
 ---
 
