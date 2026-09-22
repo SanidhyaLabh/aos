@@ -133,7 +133,7 @@ $$\frac{\partial C_i}{\partial \mathcal{R}} = 0, \quad \frac{\partial C_i}{\part
 
 ---
 
-## 🔐 EIP-712 Attested Staleness Oracle (ASO) & Statistical Bounds
+## EIP-712 Attested Staleness Oracle (ASO) & Statistical Bounds
 
 ORIGIN eliminates dependence on single-node or unauthenticated push oracles through **cryptographic EIP-712 threshold attestation** combined with real-time on-chain statistical divergence gating.
 
@@ -151,10 +151,11 @@ struct PriceReport {
     uint8   sourceCount;    // Number of independent reporting sources
 }
 ```
-
 The EIP-712 Domain Separator and Struct TypeHash are defined as:
 
-$$\text{DOMAIN\_SEPARATOR} = \text{keccak256}\left(\texttt{EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)}\right)$$
+$$\text{EIP712\_DOMAIN\_TYPEHASH} = \text{keccak256}\left(\texttt{"EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"}\right)$$
+
+$$\text{DOMAIN\_SEPARATOR} = \text{keccak256}\left(\text{abi.encode}\left(\text{EIP712\_DOMAIN\_TYPEHASH}, \text{keccak256}(name), \text{keccak256}(version), chainId, verifyingContract\right)\right)$$
 
 $$\text{TYPEHASH} = \text{keccak256}\left(\texttt{"PriceReport(bytes32 assetId,uint256 price,uint256 timestamp,uint256 roundId,uint256 divergenceBps,uint8 sourceCount)"}\right)$$
 
