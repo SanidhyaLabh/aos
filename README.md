@@ -175,16 +175,16 @@ $$\text{DivergenceBps} = \left( \frac{\max_{i \in \mathcal{S}} P_i - \min_{i \in
 When an attestation report $\mathcal{P} = (\text{assetId}, P, t_{\text{rep}}, \text{roundId}, \text{div}, N)$ with signature $(v, r, s)$ is submitted to `ASOAdapter.sol`, it must satisfy four deterministic invariants:
 
 1. **Cryptographic Authenticity:**
-   $$\text{ecrecover}\left(\text{keccak256}\left( \texttt{"\\x19\\x01"} \parallel \text{DOMAIN\_SEPARATOR} \parallel \text{hashStruct}(\mathcal{P}) \right), v, r, s\right) \in \mathcal{A}_{\text{authorized}}$$
+$$\text{ecrecover}\left(\text{keccak256}\left(\texttt{"\textbackslash x19\textbackslash x01"} \parallel \text{DOMAIN\_SEPARATOR} \parallel \text{hashStruct}\right)\right)$$
 
-2. **Quorum Sufficiency:**
+3. **Quorum Sufficiency:**
    $$N \ge N_{\min} = 3 \quad \text{and} \quad \text{DistinctProviderGroups}(N) \ge 2$$
 
-3. **Statistical Dispersion Bound:**
+4. **Statistical Dispersion Bound:**
    $$\text{DivergenceBps} \le \theta_{\max} = 50 \text{ bps} \quad (0.50\%)$$
    *(Reverts with `DivergenceTooHigh(div, 50)` if prices across venues disagree).*
 
-4. **Temporal Freshness Bound:**
+5. **Temporal Freshness Bound:**
    $$t_{\text{EVM}} - t_{\text{rep}} \le \tau_{\text{staleness}} = 60\text{ seconds}$$
    *(Reverts with `ReportStale(age, 60)` if the attestation has expired).*
 
@@ -273,7 +273,7 @@ Friction in ORIGIN is strictly one-directional:
 
 ---
 
-## 📐 Quantitative Manipulation-Cost Estimation Theorem (Risk & Liquidation Layer)
+##  Quantitative Manipulation-Cost Estimation Theorem (Risk & Liquidation Layer)
 
 In addition to token-bucket rate limiting, the underlying **Risk Engine** evaluates whether an economic exploit is mathematically profitable under current market liquidity.
 
