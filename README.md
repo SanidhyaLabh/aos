@@ -9,29 +9,9 @@
 
 ![ORIGIN System Workflow](assets/demo/diagram.png)
 
-```text
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                                 ORIGIN ARCHITECTURE                                    │
-│                                                                                        │
-│   [ Price Sources ] ──► [ Backend Risk Engine ] ──► [ EIP-712 Attestation Service ]    │
-│    (Pyth, Binance,       (Median, Spread Bps,        (Typed Digest, ECDSA Signature)   │
-│     Coinbase, Uniswap)    Volatility, Drift)                         │                 │
-│                                                                      ▼                 │
-│   [ Borrower / User ] ────────────────────────────────────► [ BorrowGateway.sol ]      │
-│                                                                      │                 │
-│   ┌──────────────────────────────────────────────────────────────────┴─────────────┐   │
-│   │ ATOMIC PIPELINE (Single EVM Transaction):                                      │   │
-│   │  1. ASOAdapter.sol           ── Verify EIP-712 Signature, Quorum & Spread      │   │
-│   │  2. SentinelRegistry.sol     ── Assert Oracle State is HEALTHY                 │   │
-│   │  3. ToyLendingMarket (EEG)   ── Consume Market-Level Capacity Bucket           │   │
-│   │  4. RiskGroupExposureGuard   ── Consume Risk-Group Bucket (Correlated Assets)  │   │
-│   │  5. GlobalExposureGuard      ── Consume Protocol-Wide Global Capacity Bucket   │   │
-│   │  6. Debt Accounting          ── Originate Loan / Transfer Underlying Credit    │   │
-│   └──────────────────────────────────────────────────────────────────┬─────────────┘   │
-│                                                                      ▼                 │
-│   [ Collateral Custody ] ◄──────────────────────────────── [ Credit Originated ]      │
-└────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![ORIGIN System Workflow](assets/origin_protocol_overview.png)
+
+![ORIGIN System Workflow](assets/borrowgateway_atomic_pipeline.png)
 
 ---
 
